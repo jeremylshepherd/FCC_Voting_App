@@ -76,6 +76,7 @@ router.post('/api/newpoll', isLoggedIn, (req, res) => {
       poll.save((err) => {
           if(err) {console.log(err);}
           console.log('Poll saved!');
+          res.json({message: 'Poll saved!'});
       });
   });
 });

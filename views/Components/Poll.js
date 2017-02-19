@@ -21,17 +21,14 @@ var Poll = React.createClass({
     },
     
     handleVote: function() {
-        console.log('Vote started');
         let obj = {};
         obj.option = this.state.option;
-        console.log(obj);
         $.ajax({
           url: '/api/vote/' + this.state.poll._id,
           dataType: 'json',
           type: 'POST',
           data: obj,
           success: function(data) {
-              console.log('success');
               this.setState({option: this.state.poll.options[0].text});
               this.setState({customOption: ''});
           }.bind(this),
@@ -39,7 +36,6 @@ var Poll = React.createClass({
             console.error('/api/vote/' + this.state.poll._id, status, err.toString());
           }.bind(this)
         });
-        console.log('Vote ended');
     },
     
     getUser: function() {
@@ -157,8 +153,15 @@ var Poll = React.createClass({
                         </div>
                         <div className="row">
                             <div className="col-xs-3">
-                                <input id="vote" type="button" className="col-xs-12 btn btn-primary" value="Vote" onClick={this.handleVote}/>
-                                <a href={tweet} className="col-xs-12 btn btn-twitter "><span className="fa fa-twitter-square" alt="twitter logo"></span> Twitter</a>
+                                <input id="vote" 
+                                    type="button" 
+                                    className="col-xs-12 btn btn-primary" 
+                                    value="Vote" 
+                                    onClick={this.handleVote}
+                                />
+                                <a href={tweet} className="col-xs-12 btn btn-twitter ">
+                                    <span className="fa fa-twitter-square" alt="twitter logo"></span> Twitter
+                                </a>
                             </div>
                             <div className="col-xs-8">
                                 {delButton}
