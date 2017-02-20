@@ -8,34 +8,25 @@ import BarChartRS from './BarChartRS';
 var Poll = React.createClass({
     getInitialState: function() {
         return ({
-            userId: '',
             id: this.props.id,
+            poll: this.props.poll,
+            
+            userId: '',
             owner: false,
             chart: true,
             option: '',
             customOption: '',
+            addCustom: false,
             auth: false,
-            baseURL: '',
-            poll: this.props.poll
+            baseURL: ''
         });
     },
     
     handleVote: function() {
         let obj = {};
         obj.option = this.state.option;
-        $.ajax({
-          url: '/api/vote/' + this.state.poll._id,
-          dataType: 'json',
-          type: 'POST',
-          data: obj,
-          success: function(data) {
-              this.setState({option: this.state.poll.options[0].text});
-              this.setState({customOption: ''});
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error('/api/vote/' + this.state.poll._id, status, err.toString());
-          }.bind(this)
-        });
+        obj._id = this.state.poll._id;
+        this.props.vote(obj);
     },
     
     getUser: function() {
@@ -44,11 +35,10 @@ var Poll = React.createClass({
           dataType: 'json',
           cache: false,
           success: function(data) {
-              this.setState({auth: true});
-              if(this.state.poll.author == data._id){
+              this.setState({auth: true, userId: data._id}); //Verify registered user
+              if(this.state.poll.author == data._id){ //Determine if User created the poll
                 this.setState({
-                    owner: true,
-                    userId: data._id
+                    owner: true    
                 });
               }
           }.bind(this),
@@ -67,15 +57,21 @@ var Poll = React.createClass({
     },
     
     handleCustomInput: function(e) {
-        this.setState({customOption: e.target.value});
+        this.setState({
+            customOption: e.target.value,
+            option: e.target.value 
+        });
     },
     
     cancelCustom: function() {
-        this.setState({customOption: ''});
+        this.setState({
+            customOption: '',
+            addCustom: false
+        });
     },
     
-    handleCustom: function() {
-        this.setState({customOption: 'Custom Option'});
+    toggleCustom: function() {
+        this.setState({addCustom: true});
     },
     
     toggleChart: function() {
@@ -93,6 +89,7 @@ var Poll = React.createClass({
     componentWillReceiveProps: function(newProps) {
         this.setState({poll : newProps.poll});
         this.setState({option: newProps.poll.options[0].text});
+        this.getUser();
     },
     
     render: function() {
@@ -101,6 +98,7 @@ var Poll = React.createClass({
                 <li key={i}>{option.text}: {option.votes}</li>  
             );
         });
+        
         let dataViz = this.state.chart ? 
             (<div className="dataViz col-xs-8" onClick={this.toggleChart}>
                 <p className="text-center">Click to toggle Chart view</p>
@@ -117,22 +115,31 @@ var Poll = React.createClass({
             );
         });
         
-        if(this.state.customOption){
-            vote.push(<option key={vote.length} value={this.state.customOption}>{this.state.customOption}</option>);
-        }
         //Delete button
         let delButton = this.state.owner ? 
             (<input id="del" type="button" className="col-xs-12 btn btn-danger" value="Delete" onClick={this.handleDelete}/>) : 
             (<input id="del" type="button" className="col-xs-12 btn btn-danger hidden" value="Delete"/>);
-        //Custom option    
-        let custom = this.state.customOption ? 
-            (<div className="form-group"><input className="form-control col-xs-8" type="text" placeholder='Custom Option' value={this.state.customOption} onChange={this.handleCustomInput}/><span className="btn btn-danger col-xs-4" onClick={this.cancelCustom}>Cancel</span></div>) : 
-            (<h5 onClick={this.handleCustom}>Click here to create your own option</h5>);
+        
+        //Custom option
+        let customVB = this.state.addCustom && this.state.customOption ?        //Custom Vote Button
+            <span className="btn btn-primary col-xs-4" onClick={this.handleVote}>Vote</span> :
+            <span className="btn btn-primary disabled col-xs-4">Vote</span>;
+        let custom = this.state.addCustom ? 
+            (
+                <div className="form-group">
+                    <input className="form-control col-xs-8" type="text" placeholder='Custom Option' value={this.state.customOption} onChange={this.handleCustomInput}/>
+                    <span className="btn btn-danger col-xs-4" onClick={this.cancelCustom}>Cancel</span>
+                    {customVB}
+                    </div>
+            ) : 
+            (<h5 onClick={this.toggleCustom}>Click here to create your own option</h5>);
         let noAuth = <span></span>;
         let showCustom = this.state.auth ? custom : noAuth;
+        
         //Twitter share button
             let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
             let tweet = encodeURI(tweetString);
+        
         return (
             <div className="col-xs-12">
                 <div className="panel panel-default">

@@ -23,7 +23,7 @@ var PollForm = React.createClass({
   
   handleOptionInput: function(i, e) {
     let newOptions = JSON.parse(JSON.stringify(this.state.options));
-    newOptions[i].text = e.target.value
+    newOptions[i].text = e.target.value;
     this.setState({
       options: newOptions
     });

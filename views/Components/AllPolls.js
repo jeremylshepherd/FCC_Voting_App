@@ -49,6 +49,21 @@ var AllPolls = React.createClass({
         });
     },
     
+    handleVote: function(obj) {
+        $.ajax({
+          url: `/api/vote/${obj._id}`,
+          dataType: 'json',
+          type: 'POST',
+          data: obj,
+          success: function(data) {
+            this.getPolls();
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(`/api/vote/${obj._id}`, status, err.toString());
+          }.bind(this)
+        });
+    },
+    
     deletePoll: function(id) {
         $.ajax({
           url: '/api/delete/' + id,
@@ -71,14 +86,10 @@ var AllPolls = React.createClass({
         this.getUser();
     },
     
-    componentWillUpdate: function() {
-         this.getPolls();
-    },
-    
     render: function() {
         let pollNodes = this.state.polls.map((poll, i) => {
             return (
-                <Poll poll={poll} key={i} del={this.handleDelete}/>
+                <Poll poll={poll} key={i} del={this.handleDelete} vote={this.handleVote}/>
             );
         });
         let listNodes = this.state.polls.map((poll, i) => {
@@ -114,3 +125,4 @@ var AllPolls = React.createClass({
 });
 
 module.exports = AllPolls;
+

@@ -67,18 +67,18 @@ router.get('/api/me', isLoggedIn, (req, res) => {
 
 router.post('/api/newpoll', isLoggedIn, (req, res) => {
   User.findOne({'github.username' : req.user.github.username}, (err, user) => {
-      if(err){res.json(err);}
-      var poll = new Poll({
+        if(err){res.json(err);}
+        var poll = new Poll({
           title: req.body.title,
           author: user._id,
           options: req.body.options
-      });
-      poll.save((err) => {
+        });
+        poll.save((err) => {
           if(err) {console.log(err);}
           console.log('Poll saved!');
           res.json({message: 'Poll saved!'});
-      });
-  });
+        });
+    });
 });
 
 
@@ -86,16 +86,17 @@ router.post('/api/vote/:poll', (req, res) => {
     let query = {'_id' : req.params.poll,'options.text' : req.body.option};
     let update = {$inc: {'options.$.votes' : 1}};
     Poll.findOneAndUpdate(query, update, {new: true, upsert: true},(err, poll) => {
-      if(poll) {
+        //if(err) {return res.status('500').json(err);}
+        if(poll) {
           res.json(poll);
-      }else {
+        }else {
           Poll.findOne({'_id' : req.params.poll}, (err, poll) => {
               if(err) {res.json(err);}
               poll.options.push({text: req.body.option, votes: 1});
               poll.save();
               res.json(poll);
           });
-      }
+        }
     });
 });
 

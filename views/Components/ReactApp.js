@@ -1,13 +1,13 @@
-var React = require("react"),
-    Nav = require("./Nav"),
-    Footer = require("./Footer"),
-    Jumbotron = require("./Jumbotron"),
-    Subotron = require("./Subotron"),
-    Poll = require('./Poll'),
-    InfoColumn = require("./InfoColumn"),
-    PollForm = require("./PollForm"),
-    Link = require('react-router').Link,
-    $ = require("jquery");
+import  React from "react";
+import Nav from "./Nav";
+import Footer from "./Footer";
+import Jumbotron from "./Jumbotron";
+import Subotron from "./Subotron";
+import Poll from './Poll';
+import InfoColumn from "./InfoColumn";
+import PollForm from "./PollForm";
+import {Link} from 'react-router';
+import $ from "jquery";
 
 
 var ReactApp = React.createClass({
@@ -35,6 +35,7 @@ var ReactApp = React.createClass({
               avatar: data.github.avatar,
               auth: true
             });
+            this.loadPolls();
         }.bind(this),
         error: function(xhr, status, err) {
           console.error('/api/me', status, err.toString());
@@ -51,6 +52,7 @@ var ReactApp = React.createClass({
           dataType: 'json',
           cache: false,
           success: function(data) {
+            console.log('Loaded!');
             this.setState({
                 polls: data
               });
@@ -69,13 +71,29 @@ var ReactApp = React.createClass({
           type: 'POST',
           data: poll,
           success: function(data) {
-              console.log('success', this.state.addPoll);
+              this.loadPolls();
           }.bind(this),
           error: function(xhr, status, err) {
             console.error('/' + this.state.user.github.username + '/polls', status, err.toString());
           }.bind(this)
         });
         this.setState({addPoll: false});
+    },
+    
+    handleVote: function(obj) {
+        $.ajax({
+          url: `/api/vote/${obj._id}`,
+          dataType: 'json',
+          type: 'POST',
+          data: obj,
+          success: function(data) {
+            console.log(JSON.stringify(data, null, 2));
+            this.loadPolls();
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(`/api/vote/${obj._id}`, status, err.toString());
+          }.bind(this)
+        });
     },
     
     deletePoll: function(id) {
@@ -102,10 +120,6 @@ var ReactApp = React.createClass({
         this.loadPolls();
     },
     
-    componentDidUpdate: function() {
-        this.loadPolls();
-    },
-    
     render: function() {
       var form;
       if(this.state.addPoll) {
@@ -125,7 +139,7 @@ var ReactApp = React.createClass({
       
       let pollNodes = this.state.polls.map((poll, i) => {
           return (
-            <Poll poll={poll} key={i} del={this.deletePoll}/>
+            <Poll poll={poll} key={i} del={this.deletePoll } vote={this.handleVote}/>
           );
       });
       let all = (

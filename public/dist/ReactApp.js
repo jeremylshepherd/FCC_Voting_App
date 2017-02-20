@@ -19123,38 +19123,25 @@ var Poll = _react2.default.createClass({
 
     getInitialState: function getInitialState() {
         return {
-            userId: '',
             id: this.props.id,
+            poll: this.props.poll,
+
+            userId: '',
             owner: false,
             chart: true,
             option: '',
             customOption: '',
+            addCustom: false,
             auth: false,
-            baseURL: '',
-            poll: this.props.poll
+            baseURL: ''
         };
     },
 
     handleVote: function handleVote() {
-        console.log('Vote started');
         var obj = {};
         obj.option = this.state.option;
-        console.log(obj);
-        _jquery2.default.ajax({
-            url: '/api/vote/' + this.state.poll._id,
-            dataType: 'json',
-            type: 'POST',
-            data: obj,
-            success: function (data) {
-                console.log('success');
-                this.setState({ option: this.state.poll.options[0].text });
-                this.setState({ customOption: '' });
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/api/vote/' + this.state.poll._id, status, err.toString());
-            }.bind(this)
-        });
-        console.log('Vote ended');
+        obj._id = this.state.poll._id;
+        this.props.vote(obj);
     },
 
     getUser: function getUser() {
@@ -19163,11 +19150,11 @@ var Poll = _react2.default.createClass({
             dataType: 'json',
             cache: false,
             success: function (data) {
-                this.setState({ auth: true });
+                this.setState({ auth: true, userId: data._id }); //Verify registered user
                 if (this.state.poll.author == data._id) {
+                    //Determine if User created the poll
                     this.setState({
-                        owner: true,
-                        userId: data._id
+                        owner: true
                     });
                 }
             }.bind(this),
@@ -19186,15 +19173,21 @@ var Poll = _react2.default.createClass({
     },
 
     handleCustomInput: function handleCustomInput(e) {
-        this.setState({ customOption: e.target.value });
+        this.setState({
+            customOption: e.target.value,
+            option: e.target.value
+        });
     },
 
     cancelCustom: function cancelCustom() {
-        this.setState({ customOption: '' });
+        this.setState({
+            customOption: '',
+            addCustom: false
+        });
     },
 
-    handleCustom: function handleCustom() {
-        this.setState({ customOption: 'Custom Option' });
+    toggleCustom: function toggleCustom() {
+        this.setState({ addCustom: true });
     },
 
     toggleChart: function toggleChart() {
@@ -19212,6 +19205,7 @@ var Poll = _react2.default.createClass({
     componentWillReceiveProps: function componentWillReceiveProps(newProps) {
         this.setState({ poll: newProps.poll });
         this.setState({ option: newProps.poll.options[0].text });
+        this.getUser();
     },
 
     render: function render() {
@@ -19224,6 +19218,7 @@ var Poll = _react2.default.createClass({
                 option.votes
             );
         });
+
         var dataViz = this.state.chart ? _react2.default.createElement(
             "div",
             { className: "dataViz col-xs-8", onClick: this.toggleChart },
@@ -19256,17 +19251,21 @@ var Poll = _react2.default.createClass({
             );
         });
 
-        if (this.state.customOption) {
-            vote.push(_react2.default.createElement(
-                "option",
-                { key: vote.length, value: this.state.customOption },
-                this.state.customOption
-            ));
-        }
         //Delete button
         var delButton = this.state.owner ? _react2.default.createElement("input", { id: "del", type: "button", className: "col-xs-12 btn btn-danger", value: "Delete", onClick: this.handleDelete }) : _react2.default.createElement("input", { id: "del", type: "button", className: "col-xs-12 btn btn-danger hidden", value: "Delete" });
-        //Custom option    
-        var custom = this.state.customOption ? _react2.default.createElement(
+
+        //Custom option
+        var customVB = this.state.addCustom && this.state.customOption ? //Custom Vote Button
+        _react2.default.createElement(
+            "span",
+            { className: "btn btn-primary col-xs-4", onClick: this.handleVote },
+            "Vote"
+        ) : _react2.default.createElement(
+            "span",
+            { className: "btn btn-primary disabled col-xs-4" },
+            "Vote"
+        );
+        var custom = this.state.addCustom ? _react2.default.createElement(
             "div",
             { className: "form-group" },
             _react2.default.createElement("input", { className: "form-control col-xs-8", type: "text", placeholder: "Custom Option", value: this.state.customOption, onChange: this.handleCustomInput }),
@@ -19274,17 +19273,20 @@ var Poll = _react2.default.createClass({
                 "span",
                 { className: "btn btn-danger col-xs-4", onClick: this.cancelCustom },
                 "Cancel"
-            )
+            ),
+            customVB
         ) : _react2.default.createElement(
             "h5",
-            { onClick: this.handleCustom },
+            { onClick: this.toggleCustom },
             "Click here to create your own option"
         );
         var noAuth = _react2.default.createElement("span", null);
         var showCustom = this.state.auth ? custom : noAuth;
+
         //Twitter share button
         var tweetString = "https://twitter.com/intent/tweet?text=Hey, check out my new poll. " + this.state.poll.title + "&url=" + this.state.baseURL + "/poll/" + this.state.poll._id;
         var tweet = encodeURI(tweetString);
+
         return _react2.default.createElement(
             "div",
             { className: "col-xs-12" },
@@ -19328,7 +19330,12 @@ var Poll = _react2.default.createClass({
                         _react2.default.createElement(
                             "div",
                             { className: "col-xs-3" },
-                            _react2.default.createElement("input", { id: "vote", type: "button", className: "col-xs-12 btn btn-primary", value: "Vote", onClick: this.handleVote }),
+                            _react2.default.createElement("input", { id: "vote",
+                                type: "button",
+                                className: "col-xs-12 btn btn-primary",
+                                value: "Vote",
+                                onClick: this.handleVote
+                            }),
                             _react2.default.createElement(
                                 "a",
                                 { href: tweet, className: "col-xs-12 btn btn-twitter " },
@@ -19463,18 +19470,47 @@ module.exports = PollForm;
 },{"react":89}],99:[function(require,module,exports){
 "use strict";
 
-var React = require("react"),
-    Nav = require("./Nav"),
-    Footer = require("./Footer"),
-    Jumbotron = require("./Jumbotron"),
-    Subotron = require("./Subotron"),
-    Poll = require('./Poll'),
-    InfoColumn = require("./InfoColumn"),
-    PollForm = require("./PollForm"),
-    Link = require('react-router').Link,
-    $ = require("jquery");
+var _react = require("react");
 
-var ReactApp = React.createClass({
+var _react2 = _interopRequireDefault(_react);
+
+var _Nav = require("./Nav");
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _Footer = require("./Footer");
+
+var _Footer2 = _interopRequireDefault(_Footer);
+
+var _Jumbotron = require("./Jumbotron");
+
+var _Jumbotron2 = _interopRequireDefault(_Jumbotron);
+
+var _Subotron = require("./Subotron");
+
+var _Subotron2 = _interopRequireDefault(_Subotron);
+
+var _Poll = require("./Poll");
+
+var _Poll2 = _interopRequireDefault(_Poll);
+
+var _InfoColumn = require("./InfoColumn");
+
+var _InfoColumn2 = _interopRequireDefault(_InfoColumn);
+
+var _PollForm = require("./PollForm");
+
+var _PollForm2 = _interopRequireDefault(_PollForm);
+
+var _reactRouter = require("react-router");
+
+var _jquery = require("jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ReactApp = _react2.default.createClass({
     displayName: "ReactApp",
 
     getInitialState: function getInitialState() {
@@ -19489,7 +19525,7 @@ var ReactApp = React.createClass({
     },
 
     getUser: function getUser() {
-        $.ajax({
+        _jquery2.default.ajax({
             url: '/api/me',
             dataType: 'json',
             cache: false,
@@ -19501,6 +19537,7 @@ var ReactApp = React.createClass({
                     avatar: data.github.avatar,
                     auth: true
                 });
+                this.loadPolls();
             }.bind(this),
             error: function (xhr, status, err) {
                 console.error('/api/me', status, err.toString());
@@ -19512,11 +19549,12 @@ var ReactApp = React.createClass({
         if (!this.state.username) {
             return;
         }
-        $.ajax({
+        _jquery2.default.ajax({
             url: '/api/' + this.state.username + '/polls',
             dataType: 'json',
             cache: false,
             success: function (data) {
+                console.log('Loaded!');
                 this.setState({
                     polls: data
                 });
@@ -19529,13 +19567,13 @@ var ReactApp = React.createClass({
 
     addNewPoll: function addNewPoll(obj) {
         var poll = obj;
-        $.ajax({
+        _jquery2.default.ajax({
             url: '/api/newpoll',
             dataType: 'json',
             type: 'POST',
             data: poll,
             success: function (data) {
-                console.log('success', this.state.addPoll);
+                this.loadPolls();
             }.bind(this),
             error: function (xhr, status, err) {
                 console.error('/' + this.state.user.github.username + '/polls', status, err.toString());
@@ -19544,8 +19582,24 @@ var ReactApp = React.createClass({
         this.setState({ addPoll: false });
     },
 
+    handleVote: function handleVote(obj) {
+        _jquery2.default.ajax({
+            url: "/api/vote/" + obj._id,
+            dataType: 'json',
+            type: 'POST',
+            data: obj,
+            success: function (data) {
+                console.log(JSON.stringify(data, null, 2));
+                this.loadPolls();
+            }.bind(this),
+            error: function (xhr, status, err) {
+                console.error("/api/vote/" + obj._id, status, err.toString());
+            }.bind(this)
+        });
+    },
+
     deletePoll: function deletePoll(id) {
-        $.ajax({
+        _jquery2.default.ajax({
             url: '/api/delete/' + id,
             type: 'DELETE',
             success: function (data) {
@@ -19570,39 +19624,35 @@ var ReactApp = React.createClass({
         this.loadPolls();
     },
 
-    componentDidUpdate: function componentDidUpdate() {
-        this.loadPolls();
-    },
-
     render: function render() {
         var _this = this;
 
         var form;
         if (this.state.addPoll) {
-            form = React.createElement(
+            form = _react2.default.createElement(
                 "div",
                 null,
-                React.createElement(
+                _react2.default.createElement(
                     "h3",
                     { className: "text-center" },
                     "Click button to cancel. ",
-                    React.createElement(
+                    _react2.default.createElement(
                         "span",
                         { className: "btn btn-danger", onClick: this.cancelForm },
                         "Cancel Poll"
                     )
                 ),
-                React.createElement(PollForm, { submit: this.addNewPoll })
+                _react2.default.createElement(_PollForm2.default, { submit: this.addNewPoll })
             );
         } else {
-            form = React.createElement(
+            form = _react2.default.createElement(
                 "div",
                 { className: "col-xs-12" },
-                React.createElement(
+                _react2.default.createElement(
                     "h3",
                     { className: "text-center" },
                     "Here are your polls. Click button to add additional polls. ",
-                    React.createElement(
+                    _react2.default.createElement(
                         "span",
                         { className: "btn btn-primary", onClick: this.showForm },
                         "Add Poll"
@@ -19612,39 +19662,39 @@ var ReactApp = React.createClass({
         }
 
         var pollNodes = this.state.polls.map(function (poll, i) {
-            return React.createElement(Poll, { poll: poll, key: i, del: _this.deletePoll });
+            return _react2.default.createElement(_Poll2.default, { poll: poll, key: i, del: _this.deletePoll, vote: _this.handleVote });
         });
-        var all = React.createElement(
+        var all = _react2.default.createElement(
             "div",
             { className: "col-xs-12" },
-            React.createElement(
+            _react2.default.createElement(
                 "h3",
                 { className: "text-center" },
                 "Welcome, please register or log in. Click button view all polls. ",
-                React.createElement(
-                    Link,
+                _react2.default.createElement(
+                    _reactRouter.Link,
                     { to: "polls", type: "button", className: "btn btn-default" },
                     "View Polls"
                 )
             )
         );
         var subheading = this.state.auth ? form : all;
-        return React.createElement(
+        return _react2.default.createElement(
             "div",
             null,
-            React.createElement(Nav, { avatar: this.state.avatar }),
-            React.createElement(Jumbotron, { displayName: this.state.displayName }),
-            React.createElement(
+            _react2.default.createElement(_Nav2.default, { avatar: this.state.avatar }),
+            _react2.default.createElement(_Jumbotron2.default, { displayName: this.state.displayName }),
+            _react2.default.createElement(
                 "div",
                 { className: "container" },
                 subheading
             ),
-            React.createElement(
+            _react2.default.createElement(
                 "div",
                 { className: "container" },
                 pollNodes
             ),
-            React.createElement(Footer, null)
+            _react2.default.createElement(_Footer2.default, null)
         );
     }
 });
