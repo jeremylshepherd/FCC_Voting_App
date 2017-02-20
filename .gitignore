@@ -3,3 +3,4 @@ npm-debug.log
 .DS_Store
 /*.env
 passport-compare.js
+ES6_fix.js
