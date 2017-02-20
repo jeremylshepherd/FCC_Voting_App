@@ -27,6 +27,7 @@ var Poll = React.createClass({
         obj.option = this.state.option;
         obj._id = this.state.poll._id;
         this.props.vote(obj);
+        this.setState({addCustom: false});
     },
     
     getUser: function() {
