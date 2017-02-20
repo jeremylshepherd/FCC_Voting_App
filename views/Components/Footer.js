@@ -7,15 +7,15 @@ var Footer = React.createClass({
             <footer className="navbar navbar-inverse navbar-fixed-bottom">
               <div className="container">
                 <a href='http://twitter.com/jeremylshepherd'>
-                    <h1 className="navbar-brand">
+                    <span className="navbar-brand">
                         @Jeremy L Shepherd
-                    </h1>
+                    </span>
                 </a>
                 <div className= "navbar-right">
-                    <h4 className="navbar-text navbar-right">
-                        ...in partial completion of Backend Certification.
-                        <i className="fa fa-free-code-camp fa-3x" aria-hidden="true"></i>
-                    </h4>
+                    <span className="navbar-text navbar-right">
+                        {'...in partial completion of Backend Certification.  '}
+                        <i className="fa fa-free-code-camp" aria-hidden="true"></i>
+                    </span>
                 </div>
               </div>
             </footer>

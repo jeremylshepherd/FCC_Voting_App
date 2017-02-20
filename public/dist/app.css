@@ -248,8 +248,13 @@ a:hover {
 li {
   list-style: none; }
 
-.navbar-btn {
-  margin-top: 25px; }
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-text,
+.navbar-inverse .navbar-nav {
+  color: #ccc; }
+
+.navbar-text {
+  margin-bottom: 0; }
 
 .fa-free-code-camp {
   color: #fff; }
@@ -262,21 +267,13 @@ li {
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8); }
 
 .icon {
-  width: 60px;
-  margin-top: 10px;
-  margin-right: 10px; }
+  width: 30px; }
 
 .dataViz {
   height: 360px; }
 
-.navbar-text {
-  margin-top: 34px; }
-
-.navbar-nav {
-  margin-top: 22px; }
-
-.btn-custom-darken {
-  margin-top: 30px; }
+.navbar .btn {
+  margin-top: 10px; }
 
 .hidden {
   display: none; }

@@ -18914,7 +18914,7 @@ var Footer = React.createClass({
                     "a",
                     { href: "http://twitter.com/jeremylshepherd" },
                     React.createElement(
-                        "h1",
+                        "span",
                         { className: "navbar-brand" },
                         "@Jeremy L Shepherd"
                     )
@@ -18923,10 +18923,10 @@ var Footer = React.createClass({
                     "div",
                     { className: "navbar-right" },
                     React.createElement(
-                        "h4",
+                        "span",
                         { className: "navbar-text navbar-right" },
-                        "...in partial completion of Backend Certification.",
-                        React.createElement("i", { className: "fa fa-free-code-camp fa-3x", "aria-hidden": "true" })
+                        '...in partial completion of Backend Certification.  ',
+                        React.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" })
                     )
                 )
             )
@@ -19034,7 +19034,7 @@ var Nav = React.createClass({
         var icon = this.props.avatar !== '' ? React.createElement(
             "div",
             { className: "navbar-right" },
-            React.createElement("img", { src: this.props.avatar, className: "img-circle icon" }),
+            React.createElement("img", { src: this.props.avatar, className: "navbar-text img-circle icon" }),
             React.createElement(
                 "a",
                 { href: "/logout", className: "btn btn-danger navbar-btn" },
@@ -19045,7 +19045,7 @@ var Nav = React.createClass({
             "div",
             { className: "navbar-right" },
             React.createElement(
-                "h4",
+                "span",
                 { className: "navbar-text" },
                 "Login or Register with:"
             ),
@@ -19066,11 +19066,11 @@ var Nav = React.createClass({
                     Link,
                     { to: "/" },
                     React.createElement(
-                        "h1",
+                        "span",
                         { className: "navbar-brand" },
-                        "FCC Voting App"
-                    ),
-                    React.createElement("i", { className: "fa fa-free-code-camp fa-3x", "aria-hidden": "true" })
+                        React.createElement("i", { className: "fa fa-free-code-camp fa", "aria-hidden": "true" }),
+                        '   FCC Voting App'
+                    )
                 ),
                 React.createElement(
                     "ul",
