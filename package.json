@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Free Code Camp Voting Application.",
   "main": "server.js",
-  "repository": "",
+  "repository": "https://github.com/jeremylshepherd/FCC_Voting_App",
   "engines": {
     "node": "4.4.5",
     "npm": "2.15.5"
