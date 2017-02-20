@@ -87,7 +87,6 @@ var ReactApp = React.createClass({
           type: 'POST',
           data: obj,
           success: function(data) {
-            console.log(JSON.stringify(data, null, 2));
             this.loadPolls();
           }.bind(this),
           error: function(xhr, status, err) {

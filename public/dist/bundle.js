@@ -35952,6 +35952,7 @@ var Poll = _react2.default.createClass({
         obj.option = this.state.option;
         obj._id = this.state.poll._id;
         this.props.vote(obj);
+        this.setState({ addCustom: false });
     },
 
     getUser: function getUser() {
@@ -36558,7 +36559,6 @@ var ReactApp = _react2.default.createClass({
             type: 'POST',
             data: obj,
             success: function (data) {
-                console.log(JSON.stringify(data, null, 2));
                 this.loadPolls();
             }.bind(this),
             error: function (xhr, status, err) {
