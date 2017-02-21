@@ -8,15 +8,6 @@ import { Router, Route, Link, browserHistory, hashHistory, IndexRoute } from 're
 
 let app = document.getElementById('app');
 
-// ReactDOM.render(
-//     <Router history={browserHistory}>
-//         <Route path='/' component={ReactApp} />
-//         <Route path='/polls' component={AllPolls} />
-//         <Route path='/poll/:poll' component={PollPage} />
-//     </Router>, 
-//     app
-// );
-
 ReactDOM.render(
     <Router history={browserHistory}>
         <Route path='/' component={ReactApp}>

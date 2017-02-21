@@ -26,6 +26,8 @@ export default class PollPage extends React.Component {
         
         this.handleVote = this.handleVote.bind(this);
         this.deletePoll = this.deletePoll.bind(this);
+        this.getPoll = this.getPoll.bind(this);
+        this.getUser = this.getUser.bind(this);
     }
     
     getUser() {

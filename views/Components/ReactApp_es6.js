@@ -3,19 +3,21 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import $ from "jquery";
 
-
-var ReactApp = React.createClass({
+export default class ReactApp extends React.Component {
     
-    getInitialState: function(){
-        return {
+    constructor(){
+        super();
+        
+        this.state = {
             user: {},
             username: '',
             auth: false,
-            avatar: ''
+            avatar: '',
+            polls: []
         };
-    },
+    }
     
-    getUser: function() {
+    getUser() {
       $.ajax({
         url: '/api/me',
         dataType: 'json',
@@ -33,13 +35,13 @@ var ReactApp = React.createClass({
           console.error('/api/me', status, err.toString());
         }.bind(this)
       });
-    },
+    }
     
-    componentDidMount: function() {
+    componentDidMount() {
         this.getUser();
-    },
+    }
 
-    render: function() {
+    render() {
         return (
             <div>
                 <Nav avatar={this.state.avatar}/>
@@ -50,6 +52,4 @@ var ReactApp = React.createClass({
             </div>
         );
     }
-});
-
-module.exports = ReactApp;
+}

@@ -14,11 +14,11 @@ export default class Jumbotron extends React.Component {
                     </div>
                 );
             }
-        
+        let avatar = this.props.avatar ? <img className="avatar img-circle" src={this.props.avatar} /> : <span className="fa fa-user" />;
         return (
             <div className="container">
                 <div className="jumbotron text-center">
-                    <h1><span className="fa fa-user"></span> {user}</h1>
+                    <h1>{avatar} {user}</h1>
                     {greeting}
                 </div>
             </div>

@@ -35239,15 +35239,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var app = document.getElementById('app');
 
-// ReactDOM.render(
-//     <Router history={browserHistory}>
-//         <Route path='/' component={ReactApp} />
-//         <Route path='/polls' component={AllPolls} />
-//         <Route path='/poll/:poll' component={PollPage} />
-//     </Router>, 
-//     app
-// );
-
 _reactDom2.default.render(_react2.default.createElement(
     _reactRouter.Router,
     { history: _reactRouter.browserHistory },
@@ -35307,7 +35298,7 @@ var AllPolls = function (_React$Component) {
             polls: []
         };
         _this.toggleList = _this.toggleList.bind(_this);
-        //this.handleVote = this.handleVote.bind(this);
+        _this.handleVote = _this.handleVote.bind(_this);
         _this.deletePoll = _this.deletePoll.bind(_this);
         return _this;
     }
@@ -35358,7 +35349,6 @@ var AllPolls = function (_React$Component) {
                 type: 'POST',
                 data: obj,
                 success: function (data) {
-                    console.log('All', JSON.stringify(data, null, 2));
                     this.allPolls();
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -35397,7 +35387,7 @@ var AllPolls = function (_React$Component) {
             var _this2 = this;
 
             var pollNodes = this.state.polls.map(function (poll, i) {
-                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.props.deletePoll, vote: _this2.props.handleVote, user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
+                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
             });
 
             var listNodes = this.state.polls.map(function (poll, i) {
@@ -35583,6 +35573,12 @@ module.exports = BarChart;
 },{"./ChartFunctions":233,"react":228}],232:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
@@ -35591,143 +35587,178 @@ var _ChartFunctions = require("./ChartFunctions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var max = void 0,
     color = ['red', 'yellow', 'blue', 'orange', 'green', 'purple', '#FF4D00', '#FFBF00', 'chartreuse', 'teal', 'violet', 'magenta'],
     ctx = void 0;
 
-var BarChartRS = _react2.default.createClass({
-    displayName: "BarChartRS",
+var BarChartRS = function (_React$Component) {
+    _inherits(BarChartRS, _React$Component);
 
-    getInitialState: function getInitialState() {
-        return {
-            width: this.props.width,
-            height: this.props.height,
-            margin: this.props.margin,
+    function BarChartRS(props) {
+        _classCallCheck(this, BarChartRS);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(BarChartRS).call(this, props));
+
+        _this.state = {
+            width: _this.props.width,
+            height: _this.props.height,
+            margin: _this.props.margin,
             container: { width: 0, height: 0 }
         };
-    },
 
-    drawBackground: function drawBackground() {
-        (0, _ChartFunctions.rect)(ctx, 0, 0, this.state.width, this.state.height, '#ccc');
-    },
+        _this.draw = _this.draw.bind(_this);
+        _this.drawBackground = _this.drawBackground.bind(_this);
+        _this.drawTicks = _this.drawTicks.bind(_this);
+        _this.drawAxes = _this.drawAxes.bind(_this);
+        _this.drawBars = _this.drawBars.bind(_this);
+        _this.drawLabels = _this.drawLabels.bind(_this);
+        _this.handleResize = _this.handleResize.bind(_this);
+        _this.draw = _this.draw.bind(_this);
+        return _this;
+    }
 
-    drawTicks: function drawTicks() {
-        var grid = { color: 'rgba(255, 255, 255, 0.3)', weight: 2 };
-        max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
-            return obj.votes;
-        }));
-        var increment = void 0;
-        if (max > 100) {
-            increment = 20;
-        } else if (max > 10 && max < 100) {
-            increment = 10;
-        } else if (max < 10) {
-            increment = 1;
+    _createClass(BarChartRS, [{
+        key: "drawBackground",
+        value: function drawBackground() {
+            (0, _ChartFunctions.rect)(ctx, 0, 0, this.state.width, this.state.height, '#ccc');
         }
-
-        while (max % increment !== 0) {
-            max++;
-        }
-        var ticks = max / increment;
-        var tickHeight = (this.state.height - this.props.margin * 2) / ticks;
-        for (var i = 0; i <= ticks; i++) {
-            var next = tickHeight * i;
-            var int = max - increment * i;
-            var point = 10;
-            (0, _ChartFunctions.text)(ctx, int, 2, this.props.margin + next + point / 2, point + 'px', 'Arial', '#fff', 'right');
-            (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.props.margin + next, this.props.margin, this.props.margin + next, grid.color, grid.weight);
-        }
-    },
-
-    drawAxes: function drawAxes() {
-        var grid = { color: 'rgba(255, 255, 255, 0.7)', weight: 2 };
-        var xAxis = (0, _ChartFunctions.line)(ctx, this.props.margin, this.props.margin, this.props.margin, this.state.height - this.props.margin / 2, grid.color, grid.weight);
-        var yAxis = (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.state.height - this.props.margin, this.state.width - this.props.margin, this.state.height - this.props.margin, grid.color, grid.weight);
-    },
-
-    drawBars: function drawBars() {
-        var chartWidth = this.state.width - this.props.margin * 2;
-        var chartHeight = this.state.height - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        var barWidth = barArea - this.props.margin * 2;
-        var barY = this.state.height - this.props.margin;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var nextX = barArea * i;
+    }, {
+        key: "drawTicks",
+        value: function drawTicks() {
+            var grid = { color: 'rgba(255, 255, 255, 0.3)', weight: 2 };
             max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
                 return obj.votes;
             }));
-            var tick = chartHeight / max;
-            var barHeight = this.props.poll.options[i].votes * tick;
-            (0, _ChartFunctions.rect)(ctx, this.props.margin * 2 + nextX, barY - barHeight, barWidth, barHeight, color[i], '#fff'); //text(ctx, this.props.poll.options[i].votes, nextX + (barArea/2) + this.props.margin, this.state.height - this.props.margin - buffer, '16px',  'Arial', '#fff', 'center');
+            var increment = void 0;
+            if (max > 100) {
+                increment = 20;
+            } else if (max > 10 && max < 100) {
+                increment = 10;
+            } else if (max < 10) {
+                increment = 1;
+            }
+
+            while (max % increment !== 0) {
+                max++;
+            }
+            var ticks = max / increment;
+            var tickHeight = (this.state.height - this.props.margin * 2) / ticks;
+            for (var i = 0; i <= ticks; i++) {
+                var next = tickHeight * i;
+                var int = max - increment * i;
+                var point = 10;
+                (0, _ChartFunctions.text)(ctx, int, 2, this.props.margin + next + point / 2, point + 'px', 'Arial', '#fff', 'right');
+                (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.props.margin + next, this.props.margin, this.props.margin + next, grid.color, grid.weight);
+            }
         }
-    },
-
-    drawLabels: function drawLabels() {
-        var chartWidth = this.state.width - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var textWidth = ctx.measureText(this.props.poll.options[i].text).width;
-            var nextBar = barArea * i;
-            var middle = (barArea - textWidth) / 2;
-            var buffer = 5;
-            (0, _ChartFunctions.text)(ctx, this.props.poll.options[i].text, this.props.margin * 2 + nextBar + middle / 2, this.state.height - buffer, '12px', 'Arial', '#fff', 'center');
+    }, {
+        key: "drawAxes",
+        value: function drawAxes() {
+            var grid = { color: 'rgba(255, 255, 255, 0.7)', weight: 2 };
+            var xAxis = (0, _ChartFunctions.line)(ctx, this.props.margin, this.props.margin, this.props.margin, this.state.height - this.props.margin / 2, grid.color, grid.weight);
+            var yAxis = (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.state.height - this.props.margin, this.state.width - this.props.margin, this.state.height - this.props.margin, grid.color, grid.weight);
         }
-    },
-
-    draw: function draw() {
-        ctx.clearRect(0, 0, this.state.width, this.state.height);
-        this.drawBackground();
-        this.drawAxes();
-        this.drawTicks();
-        this.drawBars();
-        this.drawLabels();
-    },
-
-    componentDidMount: function componentDidMount() {
-        var divID = "div" + this.props.poll._id;
-        var canvas = this.refs[this.props.poll._id];
-        var div = this.refs[divID];
-        var dim = div.getBoundingClientRect(); //Dimensions
-        ctx = canvas.getContext('2d');
-        window.addEventListener('resize', this.handleResize, false);
-        this.setState({ container: { width: dim.width, height: dim.height } });
-        if (this.state.container.width < this.props.width) {
-            this.setState({ width: dim.width, height: dim.height });
+    }, {
+        key: "drawBars",
+        value: function drawBars() {
+            var chartWidth = this.state.width - this.props.margin * 2;
+            var chartHeight = this.state.height - this.props.margin * 2;
+            var barArea = chartWidth / this.props.poll.options.length;
+            var barWidth = barArea - this.props.margin * 2;
+            var barY = this.state.height - this.props.margin;
+            for (var i = 0; i < this.props.poll.options.length; i++) {
+                var nextX = barArea * i;
+                max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
+                    return obj.votes;
+                }));
+                var tick = chartHeight / max;
+                var barHeight = this.props.poll.options[i].votes * tick;
+                (0, _ChartFunctions.rect)(ctx, this.props.margin * 2 + nextX, barY - barHeight, barWidth, barHeight, color[i], '#fff'); //text(ctx, this.props.poll.options[i].votes, nextX + (barArea/2) + this.props.margin, this.state.height - this.props.margin - buffer, '16px',  'Arial', '#fff', 'center');
+            }
         }
-        this.draw();
-    },
+    }, {
+        key: "drawLabels",
+        value: function drawLabels() {
+            var chartWidth = this.state.width - this.props.margin * 2;
+            var barArea = chartWidth / this.props.poll.options.length;
+            for (var i = 0; i < this.props.poll.options.length; i++) {
+                var textWidth = ctx.measureText(this.props.poll.options[i].text).width;
+                var nextBar = barArea * i;
+                var middle = (barArea - textWidth) / 2;
+                var buffer = 5;
+                (0, _ChartFunctions.text)(ctx, this.props.poll.options[i].text, this.props.margin * 2 + nextBar + middle / 2, this.state.height - buffer, '12px', 'Arial', '#fff', 'center');
+            }
+        }
+    }, {
+        key: "draw",
+        value: function draw() {
+            ctx.clearRect(0, 0, this.state.width, this.state.height);
+            this.drawBackground();
+            this.drawAxes();
+            this.drawTicks();
+            this.drawBars();
+            this.drawLabels();
+        }
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var divID = "div" + this.props.poll._id;
+            var canvas = this.refs[this.props.poll._id];
+            var div = this.refs[divID];
+            var dim = div.getBoundingClientRect(); //Dimensions
+            console.log(dim.width, dim.height);
+            ctx = canvas.getContext('2d');
+            window.addEventListener('resize', this.handleResize, false);
+            this.setState({ container: { width: dim.width, height: dim.height } });
+            if (this.state.container.width < this.props.width) {
+                this.setState({ width: dim.width, height: dim.height });
+            }
+            this.draw();
+        }
+    }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate() {
+            var canvas = this.refs[this.props.poll._id];
+            ctx = canvas.getContext('2d');
+            window.addEventListener('resize', this.handleResize, false);
+            this.draw();
+        }
+    }, {
+        key: "handleResize",
+        value: function handleResize() {
+            var divID = "div" + this.props.poll._id;
+            var div = this.refs[divID];
+            var dim = div.getBoundingClientRect();
+            this.setState({ container: { width: dim.width, height: dim.height } });
+            var pW = this.props.width;
+            var cW = this.state.container.width;
+            var cH = this.state.container.height;
+            var aspRat = this.state.width / 4 * 3; //Aspect Ratio
+            var calcHeight = aspRat < cH ? aspRat : cH;
+            this.setState({ width: cW < pW ? cW - 40 : pW });
+            this.setState({ height: calcHeight });
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { ref: "div" + this.props.poll._id },
+                _react2.default.createElement("canvas", { className: "center-block", ref: this.props.poll._id, width: this.state.width, height: this.state.height })
+            );
+        }
+    }]);
 
-    componentDidUpdate: function componentDidUpdate() {
-        var canvas = this.refs[this.props.poll._id];
-        ctx = canvas.getContext('2d');
-        window.addEventListener('resize', this.handleResize, false);
-        this.draw();
-    },
+    return BarChartRS;
+}(_react2.default.Component);
 
-    handleResize: function handleResize() {
-        var divID = "div" + this.props.poll._id;
-        var div = this.refs[divID];
-        var dim = div.getBoundingClientRect();
-        this.setState({ container: { width: dim.width, height: dim.height } });
-        var pW = this.props.width;
-        var cW = this.state.container.width;
-        var cH = this.state.container.height;
-        var aspRat = this.state.width / 4 * 3; //Aspect Ratio
-        this.setState({ width: cW < pW ? cW - 40 : pW });
-        this.setState({ height: aspRat < cH ? aspRat : cH });
-    },
-
-    render: function render() {
-
-        return _react2.default.createElement(
-            "div",
-            { ref: "div" + this.props.poll._id },
-            _react2.default.createElement("canvas", { className: "center-block", ref: this.props.poll._id, width: this.state.width, height: this.state.height })
-        );
-    }
-});
-
-module.exports = BarChartRS;
+exports.default = BarChartRS;
 
 },{"./ChartFunctions":233,"react":228}],233:[function(require,module,exports){
 'use strict';
@@ -35897,7 +35928,7 @@ var Jumbotron = function (_React$Component) {
                     )
                 );
             }
-
+            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-user" });
             return _react2.default.createElement(
                 "div",
                 { className: "container" },
@@ -35907,7 +35938,7 @@ var Jumbotron = function (_React$Component) {
                     _react2.default.createElement(
                         "h1",
                         null,
-                        _react2.default.createElement("span", { className: "fa fa-user" }),
+                        avatar,
                         " ",
                         user
                     ),
@@ -35979,11 +36010,14 @@ var Main = function (_Component) {
             displayName: '',
             username: '',
             auth: false,
+            avatar: '',
             polls: []
         };
 
         _this.handleVote = _this.handleVote.bind(_this);
         _this.deletePoll = _this.deletePoll.bind(_this);
+        _this.toggleForm = _this.toggleForm.bind(_this);
+        _this.addNewPoll = _this.addNewPoll.bind(_this);
         return _this;
     }
 
@@ -35996,7 +36030,6 @@ var Main = function (_Component) {
                 type: 'POST',
                 data: obj,
                 success: function (data) {
-                    console.log('Main', JSON.stringify(data, null, 2));
                     this.userPolls();
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -36031,7 +36064,8 @@ var Main = function (_Component) {
                         _id: data._id,
                         displayName: data.github.displayName,
                         username: data.github.username,
-                        auth: true
+                        auth: true,
+                        avatar: data.github.avatar
                     });
                     this.userPolls();
                 }.bind(this),
@@ -36060,6 +36094,24 @@ var Main = function (_Component) {
                     console.error('/' + this.state.user.github.username + '/polls', status, err.toString());
                 }.bind(this)
             });
+        }
+    }, {
+        key: "addNewPoll",
+        value: function addNewPoll(obj) {
+            var poll = obj;
+            _jquery2.default.ajax({
+                url: '/api/newpoll',
+                dataType: 'json',
+                type: 'POST',
+                data: poll,
+                success: function (data) {
+                    this.userPolls();
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.error('/api/newpoll', status, err.toString());
+                }.bind(this)
+            });
+            this.setState({ addPoll: false });
         }
     }, {
         key: "componentDidMount",
@@ -36103,7 +36155,7 @@ var Main = function (_Component) {
             );
 
             var pollNodes = this.state.polls.map(function (poll, i) {
-                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.props.deletePoll, vote: _this2.props.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
+                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
             });
 
             var all = _react2.default.createElement(
@@ -36121,11 +36173,11 @@ var Main = function (_Component) {
                 )
             );
 
-            var subheading = this.props.auth ? form : all;
+            var subheading = this.state.auth ? form : all;
             return _react2.default.createElement(
                 "div",
                 null,
-                _react2.default.createElement(_Jumbotron2.default, { displayName: this.state.displayName }),
+                _react2.default.createElement(_Jumbotron2.default, { displayName: this.state.displayName, avatar: this.state.avatar }),
                 _react2.default.createElement(
                     "div",
                     { className: "container" },
@@ -36449,6 +36501,8 @@ var PollPage = function (_React$Component) {
 
         _this.handleVote = _this.handleVote.bind(_this);
         _this.deletePoll = _this.deletePoll.bind(_this);
+        _this.getPoll = _this.getPoll.bind(_this);
+        _this.getUser = _this.getUser.bind(_this);
         return _this;
     }
 
@@ -36569,9 +36623,9 @@ var _BarChart = require("./BarChart");
 
 var _BarChart2 = _interopRequireDefault(_BarChart);
 
-var _BarChartRS = require("./BarChartRS");
+var _BarChartRS_es = require("./BarChartRS_es6");
 
-var _BarChartRS2 = _interopRequireDefault(_BarChartRS);
+var _BarChartRS_es2 = _interopRequireDefault(_BarChartRS_es);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36622,24 +36676,6 @@ var Poll = function (_React$Component) {
                 });
             }
         }
-
-        // getUser() {
-        //   $.ajax({
-        //     url: '/api/me',
-        //     dataType: 'json',
-        //     cache: false,
-        //     success: function(data) {
-        //       this.setState({
-        //           _id: data._id
-        //         });
-        //         this.getOwner();
-        //     }.bind(this),
-        //     error: function(xhr, status, err) {
-        //       console.error('/api/me', status, err.toString());
-        //     }.bind(this)
-        //   });
-        // }
-
     }, {
         key: "handleVote",
         value: function handleVote() {
@@ -36647,6 +36683,7 @@ var Poll = function (_React$Component) {
             obj.option = this.state.option;
             obj._id = this.state.poll._id;
             this.props.vote(obj);
+            this.cancelCustom();
         }
     }, {
         key: "handleDelete",
@@ -36687,7 +36724,6 @@ var Poll = function (_React$Component) {
     }, {
         key: "componentDidMount",
         value: function componentDidMount() {
-            //console.log('this.props', JSON.stringify({...this.props}, null, 2));
             this.getOwner();
             var thisURLSplit = window.location.href.split('/');
             var baseURL = thisURLSplit[2];
@@ -36723,7 +36759,7 @@ var Poll = function (_React$Component) {
                     { className: "text-center" },
                     "Click to toggle Chart view"
                 ),
-                _react2.default.createElement(_BarChartRS2.default, { className: "center-block", poll: this.state.poll, width: 600, height: 300, margin: 20 })
+                _react2.default.createElement(_BarChartRS_es2.default, { className: "center-block", ref: "div" + this.state.poll._id, poll: this.state.poll, width: 600, height: 300, margin: 20 })
             );
 
             var List = _react2.default.createElement(
@@ -36861,8 +36897,14 @@ var Poll = function (_React$Component) {
 
 exports.default = Poll;
 
-},{"./BarChart":231,"./BarChartRS":232,"./ChartFunctions":233,"jquery":2,"react":228,"react-router":30}],241:[function(require,module,exports){
+},{"./BarChart":231,"./BarChartRS_es6":232,"./ChartFunctions":233,"jquery":2,"react":228,"react-router":30}],241:[function(require,module,exports){
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -36882,58 +36924,76 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ReactApp = _react2.default.createClass({
-    displayName: "ReactApp",
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    getInitialState: function getInitialState() {
-        return {
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ReactApp = function (_React$Component) {
+    _inherits(ReactApp, _React$Component);
+
+    function ReactApp() {
+        _classCallCheck(this, ReactApp);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactApp).call(this));
+
+        _this.state = {
             user: {},
             username: '',
             auth: false,
-            avatar: ''
+            avatar: '',
+            polls: []
         };
-    },
-
-    getUser: function getUser() {
-        _jquery2.default.ajax({
-            url: '/api/me',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                this.setState({
-                    user: data,
-                    displayName: data.github.displayName,
-                    username: data.github.username,
-                    avatar: data.github.avatar,
-                    auth: true
-                });
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/api/me', status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    componentDidMount: function componentDidMount() {
-        this.getUser();
-    },
-
-    render: function render() {
-        return _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(_Nav2.default, { avatar: this.state.avatar }),
-            _react2.default.createElement(
-                "main",
-                null,
-                this.props.children
-            ),
-            _react2.default.createElement(_Footer2.default, null)
-        );
+        return _this;
     }
-});
 
-module.exports = ReactApp;
+    _createClass(ReactApp, [{
+        key: "getUser",
+        value: function getUser() {
+            _jquery2.default.ajax({
+                url: '/api/me',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    this.setState({
+                        user: data,
+                        displayName: data.github.displayName,
+                        username: data.github.username,
+                        avatar: data.github.avatar,
+                        auth: true
+                    });
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.error('/api/me', status, err.toString());
+                }.bind(this)
+            });
+        }
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.getUser();
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(_Nav2.default, { avatar: this.state.avatar }),
+                _react2.default.createElement(
+                    "main",
+                    null,
+                    this.props.children
+                ),
+                _react2.default.createElement(_Footer2.default, null)
+            );
+        }
+    }]);
+
+    return ReactApp;
+}(_react2.default.Component);
+
+exports.default = ReactApp;
 
 },{"./Footer":234,"./Nav":237,"jquery":2,"react":228}]},{},[229]);

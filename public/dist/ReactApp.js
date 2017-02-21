@@ -19051,7 +19051,7 @@ var Jumbotron = function (_React$Component) {
                     )
                 );
             }
-
+            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-user" });
             return _react2.default.createElement(
                 "div",
                 { className: "container" },
@@ -19061,7 +19061,7 @@ var Jumbotron = function (_React$Component) {
                     _react2.default.createElement(
                         "h1",
                         null,
-                        _react2.default.createElement("span", { className: "fa fa-user" }),
+                        avatar,
                         " ",
                         user
                     ),

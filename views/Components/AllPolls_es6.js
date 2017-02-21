@@ -60,7 +60,6 @@ export default class AllPolls extends React.Component {
           type: 'POST',
           data: obj,
           success: function(data) {
-            console.log('All',JSON.stringify(data, null, 2));
             this.allPolls();
           }.bind(this),
           error: function(xhr, status, err) {
@@ -95,7 +94,7 @@ export default class AllPolls extends React.Component {
         
         let pollNodes = this.state.polls.map((poll, i) => {
             return (
-                <Poll poll={poll} key={i} del={this.props.deletePoll} vote={this.props.handleVote} user={this.state.user} _id={this.state._id} auth={this.state.auth}/>
+                <Poll poll={poll} key={i} del={this.deletePoll.bind(this)} vote={this.handleVote.bind(this)} user={this.state.user} _id={this.state._id} auth={this.state.auth}/>
             );
         });
         

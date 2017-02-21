@@ -3,7 +3,7 @@ import {Router, Route, Link}  from "react-router";
 import $ from 'jquery';
 import {rect, line, text} from "./ChartFunctions";
 import BarChart from './BarChart';
-import BarChartRS from './BarChartRS';
+import BarChartRS from './BarChartRS_es6';
 
 export default class Poll extends React.Component {
     constructor(props){
@@ -44,6 +44,7 @@ export default class Poll extends React.Component {
         obj.option = this.state.option;
         obj._id = this.state.poll._id;
         this.props.vote(obj);
+        this.cancelCustom();
     }
     
     handleDelete() {
@@ -101,7 +102,7 @@ export default class Poll extends React.Component {
         let Chart = (
             <div className="dataViz col-xs-8" onClick={this.toggleChart}>
                 <p className="text-center">Click to toggle Chart view</p>
-                <BarChartRS className='center-block' poll={this.state.poll} width={600} height={300} margin={20}/>
+                <BarChartRS className='center-block' ref={`div${this.state.poll._id}`} poll={this.state.poll} width={600} height={300} margin={20}/>
             </div>
         );
         
@@ -143,8 +144,8 @@ export default class Poll extends React.Component {
         let showCustom = this.props.auth ? custom : noAuth;
         
         //Twitter share button
-            let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
-            let tweet = encodeURI(tweetString);
+        let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
+        let tweet = encodeURI(tweetString);
         
         return (
             <div className="col-xs-12">
