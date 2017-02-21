@@ -1,8 +1,8 @@
-var React = require("react"),
-    Link = require("react-router").Link;
+import React from "react";
+import {Link} from "react-router";
 
-var Nav = React.createClass({
-    render: function() {
+export default class Nav extends React.Component {
+    render() {
         let icon = this.props.avatar !== '' ? (
             <div className="navbar-right"><img src={this.props.avatar} className="navbar-text img-circle icon"/>
                 <a href="/logout" className="btn btn-danger navbar-btn"><span className="fa fa-eject"/> Logout</a>
@@ -30,6 +30,4 @@ var Nav = React.createClass({
             </nav>
         );
     }
-});
-
-module.exports = Nav;
+}

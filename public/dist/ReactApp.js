@@ -18897,44 +18897,72 @@ module.exports = Chart;
 },{}],93:[function(require,module,exports){
 "use strict";
 
-var React = require("react"),
-    Link = require("react-router").Link;
-
-var Footer = React.createClass({
-    displayName: "Footer",
-
-    render: function render() {
-        return React.createElement(
-            "footer",
-            { className: "navbar navbar-inverse navbar-fixed-bottom" },
-            React.createElement(
-                "div",
-                { className: "container" },
-                React.createElement(
-                    "a",
-                    { href: "http://twitter.com/jeremylshepherd" },
-                    React.createElement(
-                        "span",
-                        { className: "navbar-brand" },
-                        "@Jeremy L Shepherd"
-                    )
-                ),
-                React.createElement(
-                    "div",
-                    { className: "navbar-right" },
-                    React.createElement(
-                        "span",
-                        { className: "navbar-text navbar-right" },
-                        '...in partial completion of Backend Certification.  ',
-                        React.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" })
-                    )
-                )
-            )
-        );
-    }
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
 
-module.exports = Footer;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require("react-router");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Footer = function (_React$Component) {
+    _inherits(Footer, _React$Component);
+
+    function Footer() {
+        _classCallCheck(this, Footer);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Footer).apply(this, arguments));
+    }
+
+    _createClass(Footer, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "footer",
+                { className: "navbar navbar-inverse navbar-fixed-bottom" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "container" },
+                    _react2.default.createElement(
+                        "a",
+                        { href: "http://twitter.com/jeremylshepherd" },
+                        _react2.default.createElement(
+                            "span",
+                            { className: "navbar-brand" },
+                            "@Jeremy L Shepherd"
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "navbar-right" },
+                        _react2.default.createElement(
+                            "span",
+                            { className: "navbar-text navbar-right" },
+                            '...in partial completion of Backend Certification.  ',
+                            _react2.default.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" })
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Footer;
+}(_react2.default.Component);
+
+exports.default = Footer;
 
 },{"react":89,"react-router":29}],94:[function(require,module,exports){
 "use strict";
@@ -18968,130 +18996,185 @@ module.exports = InfoColumn;
 },{"react":89}],95:[function(require,module,exports){
 "use strict";
 
-var React = require("react");
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-var Jumbotron = React.createClass({
-    displayName: "Jumbotron",
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    render: function render() {
-        var user = this.props.displayName ? "Hello, " + this.props.displayName : "FCC Voting App";
-        var greeting;
-        if (this.props.displayName) {
-            greeting = React.createElement(
-                "h3",
-                null,
-                "Welcome back! Let's get started with a new Poll!"
-            );
-        } else {
-            greeting = React.createElement(
-                "div",
-                null,
-                React.createElement(
-                    "p",
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Jumbotron = function (_React$Component) {
+    _inherits(Jumbotron, _React$Component);
+
+    function Jumbotron() {
+        _classCallCheck(this, Jumbotron);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Jumbotron).apply(this, arguments));
+    }
+
+    _createClass(Jumbotron, [{
+        key: "render",
+        value: function render() {
+            var user = this.props.displayName ? "Hello, " + this.props.displayName : "FCC Voting App";
+            var greeting;
+            if (this.props.displayName) {
+                greeting = _react2.default.createElement(
+                    "h3",
                     null,
-                    "Login or Register with:"
-                ),
-                React.createElement(
-                    "a",
-                    { href: "/auth/github", className: "btn btn-custom-darken" },
-                    React.createElement("span", { className: "fa fa-github", alt: "github logo" }),
-                    " Github"
+                    "Welcome back! Let's get started with a new Poll!"
+                );
+            } else {
+                greeting = _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(
+                        "p",
+                        null,
+                        "Login or Register with:"
+                    ),
+                    _react2.default.createElement(
+                        "a",
+                        { href: "/auth/github", className: "btn btn-custom-darken" },
+                        _react2.default.createElement("span", { className: "fa fa-github", alt: "github logo" }),
+                        " Github"
+                    )
+                );
+            }
+
+            return _react2.default.createElement(
+                "div",
+                { className: "container" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "jumbotron text-center" },
+                    _react2.default.createElement(
+                        "h1",
+                        null,
+                        _react2.default.createElement("span", { className: "fa fa-user" }),
+                        " ",
+                        user
+                    ),
+                    greeting
                 )
             );
         }
+    }]);
 
-        return React.createElement(
-            "div",
-            { className: "container" },
-            React.createElement(
-                "div",
-                { className: "jumbotron text-center" },
-                React.createElement(
-                    "h1",
-                    null,
-                    React.createElement("span", { className: "fa fa-user" }),
-                    " ",
-                    user
-                ),
-                greeting
-            )
-        );
-    }
-});
+    return Jumbotron;
+}(_react2.default.Component);
 
-module.exports = Jumbotron;
+exports.default = Jumbotron;
 
 },{"react":89}],96:[function(require,module,exports){
 "use strict";
 
-var React = require("react"),
-    Link = require("react-router").Link;
-
-var Nav = React.createClass({
-    displayName: "Nav",
-
-    render: function render() {
-        var icon = this.props.avatar !== '' ? React.createElement(
-            "div",
-            { className: "navbar-right" },
-            React.createElement("img", { src: this.props.avatar, className: "navbar-text img-circle icon" }),
-            React.createElement(
-                "a",
-                { href: "/logout", className: "btn btn-danger navbar-btn" },
-                React.createElement("span", { className: "fa fa-eject" }),
-                " Logout"
-            )
-        ) : React.createElement(
-            "div",
-            { className: "navbar-right" },
-            React.createElement(
-                "span",
-                { className: "navbar-text" },
-                "Login or Register with:"
-            ),
-            React.createElement(
-                "a",
-                { href: "/auth/github", className: "btn btn-custom-darken" },
-                React.createElement("span", { className: "fa fa-github", alt: "github logo" }),
-                " Github"
-            )
-        );
-        return React.createElement(
-            "nav",
-            { className: "navbar navbar-inverse navbar-static-top" },
-            React.createElement(
-                "div",
-                { className: "container" },
-                React.createElement(
-                    Link,
-                    { to: "/" },
-                    React.createElement(
-                        "span",
-                        { className: "navbar-brand" },
-                        React.createElement("i", { className: "fa fa-free-code-camp fa", "aria-hidden": "true" }),
-                        '   FCC Voting App'
-                    )
-                ),
-                React.createElement(
-                    "ul",
-                    { className: "nav navbar-nav" },
-                    React.createElement(
-                        "li",
-                        null,
-                        React.createElement(
-                            Link,
-                            { to: "/polls" },
-                            "All Polls"
-                        )
-                    )
-                ),
-                icon
-            )
-        );
-    }
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
 
-module.exports = Nav;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require("react-router");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Nav = function (_React$Component) {
+    _inherits(Nav, _React$Component);
+
+    function Nav() {
+        _classCallCheck(this, Nav);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Nav).apply(this, arguments));
+    }
+
+    _createClass(Nav, [{
+        key: "render",
+        value: function render() {
+            var icon = this.props.avatar !== '' ? _react2.default.createElement(
+                "div",
+                { className: "navbar-right" },
+                _react2.default.createElement("img", { src: this.props.avatar, className: "navbar-text img-circle icon" }),
+                _react2.default.createElement(
+                    "a",
+                    { href: "/logout", className: "btn btn-danger navbar-btn" },
+                    _react2.default.createElement("span", { className: "fa fa-eject" }),
+                    " Logout"
+                )
+            ) : _react2.default.createElement(
+                "div",
+                { className: "navbar-right" },
+                _react2.default.createElement(
+                    "span",
+                    { className: "navbar-text" },
+                    "Login or Register with:"
+                ),
+                _react2.default.createElement(
+                    "a",
+                    { href: "/auth/github", className: "btn btn-custom-darken" },
+                    _react2.default.createElement("span", { className: "fa fa-github", alt: "github logo" }),
+                    " Github"
+                )
+            );
+            return _react2.default.createElement(
+                "nav",
+                { className: "navbar navbar-inverse navbar-static-top" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "container" },
+                    _react2.default.createElement(
+                        _reactRouter.Link,
+                        { to: "/" },
+                        _react2.default.createElement(
+                            "span",
+                            { className: "navbar-brand" },
+                            _react2.default.createElement("i", { className: "fa fa-free-code-camp fa", "aria-hidden": "true" }),
+                            '   FCC Voting App'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "ul",
+                        { className: "nav navbar-nav" },
+                        _react2.default.createElement(
+                            "li",
+                            null,
+                            _react2.default.createElement(
+                                _reactRouter.Link,
+                                { to: "/polls" },
+                                "All Polls"
+                            )
+                        )
+                    ),
+                    icon
+                )
+            );
+        }
+    }]);
+
+    return Nav;
+}(_react2.default.Component);
+
+exports.default = Nav;
 
 },{"react":89,"react-router":29}],97:[function(require,module,exports){
 "use strict";

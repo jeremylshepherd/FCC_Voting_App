@@ -1,7 +1,7 @@
-var React = require("react");
+import React from "react";
 
-var Jumbotron = React.createClass({
-    render: function() {
+export default class Jumbotron extends React.Component {
+    render() {
         var user = this.props.displayName ? "Hello, " + this.props.displayName : "FCC Voting App";
         var greeting;
             if(this.props.displayName) {
@@ -25,6 +25,4 @@ var Jumbotron = React.createClass({
             
         );
     }
-});
-
-module.exports = Jumbotron;
+}

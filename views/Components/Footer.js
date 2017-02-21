@@ -1,8 +1,8 @@
-var React = require("react"),
-    Link = require("react-router").Link;
+import React from "react";
+import {Link} from "react-router";
 
-var Footer = React.createClass({
-    render: function () {
+export default class Footer extends React.Component {
+    render() {
         return (
             <footer className="navbar navbar-inverse navbar-fixed-bottom">
               <div className="container">
@@ -21,6 +21,4 @@ var Footer = React.createClass({
             </footer>
         );
     }
-});
-
-module.exports = Footer;
+}
