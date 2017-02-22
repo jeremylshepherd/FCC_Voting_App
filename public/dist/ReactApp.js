@@ -19051,7 +19051,7 @@ var Jumbotron = function (_React$Component) {
                     )
                 );
             }
-            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-user" });
+            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-free-code-camp" });
             return _react2.default.createElement(
                 "div",
                 { className: "container" },
@@ -19148,7 +19148,7 @@ var Nav = function (_React$Component) {
                         _react2.default.createElement(
                             "span",
                             { className: "navbar-brand" },
-                            _react2.default.createElement("i", { className: "fa fa-free-code-camp fa", "aria-hidden": "true" }),
+                            _react2.default.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" }),
                             '   FCC Voting App'
                         )
                     ),

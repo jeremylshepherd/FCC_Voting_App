@@ -14,7 +14,7 @@ export default class Jumbotron extends React.Component {
                     </div>
                 );
             }
-        let avatar = this.props.avatar ? <img className="avatar img-circle" src={this.props.avatar} /> : <span className="fa fa-user" />;
+        let avatar = this.props.avatar ? <img className="avatar img-circle" src={this.props.avatar} /> : <span className="fa fa-free-code-camp" />;
         return (
             <div className="container">
                 <div className="jumbotron text-center">

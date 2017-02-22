@@ -11,7 +11,7 @@ export default class Poll extends React.Component {
         this.state = {
             id: this.props.id,
             poll: this.props.poll,
-            owner: false,
+            owner: this.props.owner,
             chart: true,
             option: '',
             customOption: '',
@@ -19,7 +19,7 @@ export default class Poll extends React.Component {
             baseURL: ''
         };
         
-        //this.getOwner = this.getOwner.bind(this);
+        this.getOwner = this.getOwner.bind(this);
         this.toggleChart = this.toggleChart.bind(this);
         this.handleVote = this.handleVote.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -31,8 +31,7 @@ export default class Poll extends React.Component {
     }
     
     getOwner() {
-        //if(!this.props._id){this.getUser();}
-        if(this.props._id == this.props.poll.author) {
+        if(this.props.owner) {
             this.setState({
                owner: true 
             });
@@ -78,17 +77,21 @@ export default class Poll extends React.Component {
     }
     
     componentDidMount() {
-        this.getOwner();
         let thisURLSplit = window.location.href.split('/');
         let baseURL = thisURLSplit[2];
+        this.getOwner();
         this.setState({baseURL: 'https://' + baseURL});
         this.setState({option: this.state.poll.options[0].text});
     }
     
     componentWillReceiveProps(newProps) {
         this.setState({poll : newProps.poll});
+        this.getOwner();
         this.setState({_id: newProps._id});
         this.setState({option: newProps.poll.options[0].text});
+    }
+    
+    componentUnmount() {
         this.getOwner();
     }
     

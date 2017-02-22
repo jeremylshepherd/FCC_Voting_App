@@ -35293,6 +35293,7 @@ var AllPolls = function (_React$Component) {
         _this.state = {
             list: true,
             auth: false,
+            owner: false,
             user: {},
             _id: '',
             polls: []
@@ -35387,7 +35388,8 @@ var AllPolls = function (_React$Component) {
             var _this2 = this;
 
             var pollNodes = this.state.polls.map(function (poll, i) {
-                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
+                var owner = _this2.state.user._id == poll.author ? true : false;
+                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth, owner: owner });
             });
 
             var listNodes = this.state.polls.map(function (poll, i) {
@@ -35712,7 +35714,6 @@ var BarChartRS = function (_React$Component) {
             var canvas = this.refs[this.props.poll._id];
             var div = this.refs[divID];
             var dim = div.getBoundingClientRect(); //Dimensions
-            console.log(dim.width, dim.height);
             ctx = canvas.getContext('2d');
             window.addEventListener('resize', this.handleResize, false);
             this.setState({ container: { width: dim.width, height: dim.height } });
@@ -35730,6 +35731,11 @@ var BarChartRS = function (_React$Component) {
             this.draw();
         }
     }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+            window.removeEventListener('resize', this.handleResize);
+        }
+    }, {
         key: "handleResize",
         value: function handleResize() {
             var divID = "div" + this.props.poll._id;
@@ -35739,10 +35745,9 @@ var BarChartRS = function (_React$Component) {
             var pW = this.props.width;
             var cW = this.state.container.width;
             var cH = this.state.container.height;
-            var aspRat = this.state.width / 4 * 3; //Aspect Ratio
-            var calcHeight = aspRat < cH ? aspRat : cH;
+            var aspRat = this.state.width / 2; //Aspect Ratio
             this.setState({ width: cW < pW ? cW - 40 : pW });
-            this.setState({ height: calcHeight });
+            this.setState({ height: aspRat });
         }
     }, {
         key: "render",
@@ -35928,7 +35933,7 @@ var Jumbotron = function (_React$Component) {
                     )
                 );
             }
-            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-user" });
+            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-free-code-camp" });
             return _react2.default.createElement(
                 "div",
                 { className: "container" },
@@ -36155,7 +36160,8 @@ var Main = function (_Component) {
             );
 
             var pollNodes = this.state.polls.map(function (poll, i) {
-                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth });
+                var owner = _this2.state.user._id == poll.author ? true : false;
+                return _react2.default.createElement(_Poll_es2.default, { poll: poll, key: i, del: _this2.deletePoll.bind(_this2), vote: _this2.handleVote.bind(_this2), user: _this2.state.user, _id: _this2.state._id, auth: _this2.state.auth, owner: owner });
             });
 
             var all = _react2.default.createElement(
@@ -36269,7 +36275,7 @@ var Nav = function (_React$Component) {
                         _react2.default.createElement(
                             "span",
                             { className: "navbar-brand" },
-                            _react2.default.createElement("i", { className: "fa fa-free-code-camp fa", "aria-hidden": "true" }),
+                            _react2.default.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" }),
                             '   FCC Voting App'
                         )
                     ),
@@ -36486,8 +36492,9 @@ var PollPage = function (_React$Component) {
 
         _this.state = {
             avatar: '/icon-user-default.png',
-            _id: '',
+            _id: '999999999',
             auth: false,
+            owner: false,
             poll: {
                 title: 'null',
                 options: [{
@@ -36495,7 +36502,7 @@ var PollPage = function (_React$Component) {
                     votes: 0
                 }],
                 _id: _this.props.params.poll,
-                author: 'null'
+                author: '999999999'
             }
         };
 
@@ -36514,10 +36521,12 @@ var PollPage = function (_React$Component) {
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
+                    this.getPoll();
                     this.setState({
                         user: data,
                         _id: data._id,
-                        auth: true
+                        auth: true,
+                        owner: data._id == this.state.poll.author ? true : false
                     });
                 }.bind(this),
                 error: function (xhr, status, err) {
@@ -36534,7 +36543,10 @@ var PollPage = function (_React$Component) {
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
-                    this.setState({ poll: data });
+                    this.setState({
+                        poll: data,
+                        owner: data.author == this.state._id ? true : false
+                    });
                 }.bind(this),
                 error: function (xhr, status, err) {
                     console.error('/api/poll/' + pollId, status, err.toString());
@@ -36587,7 +36599,7 @@ var PollPage = function (_React$Component) {
                 _react2.default.createElement(
                     "div",
                     { className: "container" },
-                    _react2.default.createElement(_Poll_es2.default, { poll: this.state.poll, del: this.deletePoll.bind(this), vote: this.handleVote.bind(this), user: this.state.user, _id: this.state._id, auth: this.state.auth })
+                    _react2.default.createElement(_Poll_es2.default, { poll: this.state.poll, del: this.deletePoll.bind(this), vote: this.handleVote.bind(this), user: this.state.user, _id: this.state._id, auth: this.state.auth, owner: this.state.owner })
                 )
             );
         }
@@ -36646,7 +36658,7 @@ var Poll = function (_React$Component) {
         _this.state = {
             id: _this.props.id,
             poll: _this.props.poll,
-            owner: false,
+            owner: _this.props.owner,
             chart: true,
             option: '',
             customOption: '',
@@ -36654,7 +36666,7 @@ var Poll = function (_React$Component) {
             baseURL: ''
         };
 
-        //this.getOwner = this.getOwner.bind(this);
+        _this.getOwner = _this.getOwner.bind(_this);
         _this.toggleChart = _this.toggleChart.bind(_this);
         _this.handleVote = _this.handleVote.bind(_this);
         _this.handleDelete = _this.handleDelete.bind(_this);
@@ -36669,8 +36681,7 @@ var Poll = function (_React$Component) {
     _createClass(Poll, [{
         key: "getOwner",
         value: function getOwner() {
-            //if(!this.props._id){this.getUser();}
-            if (this.props._id == this.props.poll.author) {
+            if (this.props.owner) {
                 this.setState({
                     owner: true
                 });
@@ -36724,9 +36735,9 @@ var Poll = function (_React$Component) {
     }, {
         key: "componentDidMount",
         value: function componentDidMount() {
-            this.getOwner();
             var thisURLSplit = window.location.href.split('/');
             var baseURL = thisURLSplit[2];
+            this.getOwner();
             this.setState({ baseURL: 'https://' + baseURL });
             this.setState({ option: this.state.poll.options[0].text });
         }
@@ -36734,8 +36745,13 @@ var Poll = function (_React$Component) {
         key: "componentWillReceiveProps",
         value: function componentWillReceiveProps(newProps) {
             this.setState({ poll: newProps.poll });
+            this.getOwner();
             this.setState({ _id: newProps._id });
             this.setState({ option: newProps.poll.options[0].text });
+        }
+    }, {
+        key: "componentUnmount",
+        value: function componentUnmount() {
             this.getOwner();
         }
     }, {

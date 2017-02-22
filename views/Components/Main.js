@@ -141,8 +141,9 @@ export default class Main extends Component {
         );
         
         let pollNodes = this.state.polls.map((poll, i) => {
+            let owner = this.state.user._id == poll.author ? true : false;
             return (
-                <Poll poll={poll} key={i} del={this.deletePoll.bind(this)} vote={this.handleVote.bind(this)} user={this.state.user} _id={this.state._id} auth={this.state.auth}/>
+                <Poll poll={poll} key={i} del={this.deletePoll.bind(this)} vote={this.handleVote.bind(this)} user={this.state.user} _id={this.state._id} auth={this.state.auth} owner={owner}/>
             );
         });
         

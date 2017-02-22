@@ -23,7 +23,6 @@ require("../config/passport");
 //Authentication middleware
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
-        console.log("You are logged in!");
         return next(); 
     }
     console.error("You must first log in or register first!");

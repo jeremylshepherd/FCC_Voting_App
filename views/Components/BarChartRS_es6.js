@@ -108,7 +108,6 @@ export default class BarChartRS extends React.Component {
         let canvas = this.refs[this.props.poll._id];
         let div = this.refs[divID];
         let dim = div.getBoundingClientRect();//Dimensions
-        console.log(dim.width, dim.height);
         ctx = canvas.getContext('2d');
         window.addEventListener('resize', this.handleResize, false);
         this.setState({container: {width: dim.width, height: dim.height}});
@@ -125,6 +124,10 @@ export default class BarChartRS extends React.Component {
         this.draw();
     }
     
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    }
+    
     handleResize() {
         let divID = `div${this.props.poll._id}`;
         let div = this.refs[divID];
@@ -133,10 +136,9 @@ export default class BarChartRS extends React.Component {
         let pW = this.props.width;
         let cW = this.state.container.width;
         let cH = this.state.container.height;
-        let aspRat = (this.state.width/4) * 3; //Aspect Ratio
-        let calcHeight = aspRat < cH ? aspRat : cH;
+        let aspRat = (this.state.width/2); //Aspect Ratio
         this.setState({width: cW < pW ? cW - 40 : pW});
-        this.setState({height: calcHeight});
+        this.setState({height: aspRat});
     }
     
     render() {

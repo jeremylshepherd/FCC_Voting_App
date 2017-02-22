@@ -18,7 +18,7 @@ export default class Nav extends React.Component {
               <div className="container">
                 <Link to='/'>
                     <span className="navbar-brand">
-                    <i className="fa fa-free-code-camp fa" aria-hidden="true"></i>
+                    <i className="fa fa-free-code-camp" aria-hidden="true"></i>
                         {'   FCC Voting App'}
                     </span>
                 </Link>
