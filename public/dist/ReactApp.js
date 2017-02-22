@@ -18594,309 +18594,6 @@ module.exports = require('./lib/React');
 },{"./lib/React":61}],90:[function(require,module,exports){
 "use strict";
 
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _ChartFunctions = require("./ChartFunctions");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var max = void 0,
-    color = ['red', 'yellow', 'blue', 'orange', 'green', 'purple', '#FF4D00', '#FFBF00', 'chartreuse', 'teal', 'violet', 'magenta'],
-    ctx = void 0;
-
-var BarChart = _react2.default.createClass({
-    displayName: "BarChart",
-
-    drawBackground: function drawBackground() {
-        (0, _ChartFunctions.rect)(ctx, 0, 0, this.props.width, this.props.height, '#ccc');
-    },
-
-    drawTicks: function drawTicks() {
-        var grid = { color: 'rgba(255, 255, 255, 0.3)', weight: 2 };
-        max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
-            return obj.votes;
-        }));
-        var increment = void 0;
-        if (max > 100) {
-            increment = 20;
-        } else if (max > 10 && max < 100) {
-            increment = 10;
-        } else if (max < 10) {
-            increment = 1;
-        }
-
-        while (max % increment !== 0) {
-            max++;
-        }
-        var ticks = max / increment;
-        var tickHeight = (this.props.height - this.props.margin * 2) / ticks;
-        for (var i = 0; i <= ticks; i++) {
-            var next = tickHeight * i;
-            var int = max - increment * i;
-            var point = 10;
-            (0, _ChartFunctions.text)(ctx, int, 2, this.props.margin + next + point / 2, point + 'px', 'Arial', '#fff', 'right');
-            (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.props.margin + next, this.props.margin, this.props.margin + next, grid.color, grid.weight);
-        }
-    },
-
-    drawAxes: function drawAxes() {
-        var grid = { color: 'rgba(255, 255, 255, 0.7)', weight: 2 };
-        var xAxis = (0, _ChartFunctions.line)(ctx, this.props.margin, this.props.margin, this.props.margin, this.props.height - this.props.margin / 2, grid.color, grid.weight);
-        var yAxis = (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.props.height - this.props.margin, this.props.width - this.props.margin, this.props.height - this.props.margin, grid.color, grid.weight);
-    },
-
-    drawBars: function drawBars() {
-        var chartWidth = this.props.width - this.props.margin * 2;
-        var chartHeight = this.props.height - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        var barWidth = barArea - this.props.margin * 2;
-        var barY = this.props.height - this.props.margin;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var nextX = barArea * i;
-            max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
-                return obj.votes;
-            }));
-            var tick = chartHeight / max;
-            var barHeight = this.props.poll.options[i].votes * tick;
-            (0, _ChartFunctions.rect)(ctx, this.props.margin * 2 + nextX, barY - barHeight, barWidth, barHeight, color[i], '#fff'); //text(ctx, this.props.poll.options[i].votes, nextX + (barArea/2) + this.props.margin, this.props.height - this.props.margin - buffer, '16px',  'Arial', '#fff', 'center');
-        }
-    },
-
-    drawLabels: function drawLabels() {
-        var chartWidth = this.props.width - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var textWidth = ctx.measureText(this.props.poll.options[i].text).width;
-            var nextBar = barArea * i;
-            var middle = (barArea - textWidth) / 2;
-            var buffer = 5;
-            (0, _ChartFunctions.text)(ctx, this.props.poll.options[i].text, this.props.margin * 2 + nextBar + middle / 2, this.props.height - buffer, '12px', 'Arial', '#fff', 'center');
-        }
-    },
-
-    draw: function draw() {
-        ctx.clearRect(0, 0, this.props.width, this.props.height);
-        this.drawBackground();
-        this.drawAxes();
-        this.drawTicks();
-        this.drawBars();
-        this.drawLabels();
-    },
-
-    componentDidMount: function componentDidMount() {
-        var canvas = this.refs[this.props.poll._id];
-        ctx = canvas.getContext('2d');
-        this.draw();
-    },
-
-    componentDidUpdate: function componentDidUpdate() {
-        var canvas = this.refs[this.props.poll._id];
-        ctx = canvas.getContext('2d');
-        this.draw();
-    },
-
-    render: function render() {
-
-        return _react2.default.createElement("canvas", { className: "center-block", ref: this.props.poll._id, width: this.props.width, height: this.props.height });
-    }
-});
-
-module.exports = BarChart;
-
-},{"./ChartFunctions":92,"react":89}],91:[function(require,module,exports){
-"use strict";
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _ChartFunctions = require("./ChartFunctions");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var max = void 0,
-    color = ['red', 'yellow', 'blue', 'orange', 'green', 'purple', '#FF4D00', '#FFBF00', 'chartreuse', 'teal', 'violet', 'magenta'],
-    ctx = void 0;
-
-var BarChartRS = _react2.default.createClass({
-    displayName: "BarChartRS",
-
-    getInitialState: function getInitialState() {
-        return {
-            width: this.props.width,
-            height: this.props.height,
-            margin: this.props.margin,
-            container: { width: 0, height: 0 }
-        };
-    },
-
-    drawBackground: function drawBackground() {
-        (0, _ChartFunctions.rect)(ctx, 0, 0, this.state.width, this.state.height, '#ccc');
-    },
-
-    drawTicks: function drawTicks() {
-        var grid = { color: 'rgba(255, 255, 255, 0.3)', weight: 2 };
-        max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
-            return obj.votes;
-        }));
-        var increment = void 0;
-        if (max > 100) {
-            increment = 20;
-        } else if (max > 10 && max < 100) {
-            increment = 10;
-        } else if (max < 10) {
-            increment = 1;
-        }
-
-        while (max % increment !== 0) {
-            max++;
-        }
-        var ticks = max / increment;
-        var tickHeight = (this.state.height - this.props.margin * 2) / ticks;
-        for (var i = 0; i <= ticks; i++) {
-            var next = tickHeight * i;
-            var int = max - increment * i;
-            var point = 10;
-            (0, _ChartFunctions.text)(ctx, int, 2, this.props.margin + next + point / 2, point + 'px', 'Arial', '#fff', 'right');
-            (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.props.margin + next, this.props.margin, this.props.margin + next, grid.color, grid.weight);
-        }
-    },
-
-    drawAxes: function drawAxes() {
-        var grid = { color: 'rgba(255, 255, 255, 0.7)', weight: 2 };
-        var xAxis = (0, _ChartFunctions.line)(ctx, this.props.margin, this.props.margin, this.props.margin, this.state.height - this.props.margin / 2, grid.color, grid.weight);
-        var yAxis = (0, _ChartFunctions.line)(ctx, this.props.margin / 2, this.state.height - this.props.margin, this.state.width - this.props.margin, this.state.height - this.props.margin, grid.color, grid.weight);
-    },
-
-    drawBars: function drawBars() {
-        var chartWidth = this.state.width - this.props.margin * 2;
-        var chartHeight = this.state.height - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        var barWidth = barArea - this.props.margin * 2;
-        var barY = this.state.height - this.props.margin;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var nextX = barArea * i;
-            max = Math.max.apply(Math, this.props.poll.options.map(function (obj) {
-                return obj.votes;
-            }));
-            var tick = chartHeight / max;
-            var barHeight = this.props.poll.options[i].votes * tick;
-            (0, _ChartFunctions.rect)(ctx, this.props.margin * 2 + nextX, barY - barHeight, barWidth, barHeight, color[i], '#fff'); //text(ctx, this.props.poll.options[i].votes, nextX + (barArea/2) + this.props.margin, this.state.height - this.props.margin - buffer, '16px',  'Arial', '#fff', 'center');
-        }
-    },
-
-    drawLabels: function drawLabels() {
-        var chartWidth = this.state.width - this.props.margin * 2;
-        var barArea = chartWidth / this.props.poll.options.length;
-        for (var i = 0; i < this.props.poll.options.length; i++) {
-            var textWidth = ctx.measureText(this.props.poll.options[i].text).width;
-            var nextBar = barArea * i;
-            var middle = (barArea - textWidth) / 2;
-            var buffer = 5;
-            (0, _ChartFunctions.text)(ctx, this.props.poll.options[i].text, this.props.margin * 2 + nextBar + middle / 2, this.state.height - buffer, '12px', 'Arial', '#fff', 'center');
-        }
-    },
-
-    draw: function draw() {
-        ctx.clearRect(0, 0, this.state.width, this.state.height);
-        this.drawBackground();
-        this.drawAxes();
-        this.drawTicks();
-        this.drawBars();
-        this.drawLabels();
-    },
-
-    componentDidMount: function componentDidMount() {
-        var divID = "div" + this.props.poll._id;
-        var canvas = this.refs[this.props.poll._id];
-        var div = this.refs[divID];
-        var dim = div.getBoundingClientRect(); //Dimensions
-        ctx = canvas.getContext('2d');
-        window.addEventListener('resize', this.handleResize, false);
-        this.setState({ container: { width: dim.width, height: dim.height } });
-        if (this.state.container.width < this.props.width) {
-            this.setState({ width: dim.width, height: dim.height });
-        }
-        this.draw();
-    },
-
-    componentDidUpdate: function componentDidUpdate() {
-        var canvas = this.refs[this.props.poll._id];
-        ctx = canvas.getContext('2d');
-        window.addEventListener('resize', this.handleResize, false);
-        this.draw();
-    },
-
-    handleResize: function handleResize() {
-        var divID = "div" + this.props.poll._id;
-        var div = this.refs[divID];
-        var dim = div.getBoundingClientRect();
-        this.setState({ container: { width: dim.width, height: dim.height } });
-        var pW = this.props.width;
-        var cW = this.state.container.width;
-        var cH = this.state.container.height;
-        var aspRat = this.state.width / 4 * 3; //Aspect Ratio
-        this.setState({ width: cW < pW ? cW - 40 : pW });
-        this.setState({ height: aspRat < cH ? aspRat : cH });
-    },
-
-    render: function render() {
-
-        return _react2.default.createElement(
-            "div",
-            { ref: "div" + this.props.poll._id },
-            _react2.default.createElement("canvas", { className: "center-block", ref: this.props.poll._id, width: this.state.width, height: this.state.height })
-        );
-    }
-});
-
-module.exports = BarChartRS;
-
-},{"./ChartFunctions":92,"react":89}],92:[function(require,module,exports){
-'use strict';
-
-var Chart = {
-
-  rect: function rect(ctx, x, y, width, height, fill, stroke) {
-    ctx.beginPath();
-    ctx.rect(x, y, width, height);
-    if (fill !== undefined) {
-      ctx.fillStyle = fill;
-      ctx.fill();
-    }
-    if (stroke !== undefined) {
-      ctx.strokeStyle = stroke;
-      ctx.stroke();
-    }
-    ctx.closePath();
-  },
-
-  line: function line(ctx, sx, sy, dx, dy, color, weight) {
-    ctx.beginPath();
-    ctx.moveTo(sx, sy);
-    ctx.lineTo(dx, dy);
-    ctx.strokeStyle = color ? color : "#000";
-    ctx.lineWidth = weight ? weight : 1;
-    ctx.stroke();
-  },
-
-  text: function text(ctx, str, x, y, point, font, color) {
-    font = font !== undefined ? font : 'Arial';
-    point = point !== undefined ? point : '12px';
-    color = color !== undefined ? color : '#fff';
-    ctx.font = point + ' ' + font;
-    ctx.fillStyle = color;
-    ctx.fillText(str, x, y);
-  }
-};
-
-module.exports = Chart;
-
-},{}],93:[function(require,module,exports){
-"use strict";
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -18906,8 +18603,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require("react-router");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18964,119 +18659,7 @@ var Footer = function (_React$Component) {
 
 exports.default = Footer;
 
-},{"react":89,"react-router":29}],94:[function(require,module,exports){
-"use strict";
-
-var React = require("react");
-
-var InfoColumn = React.createClass({
-    displayName: "InfoColumn",
-
-    render: function render() {
-        return React.createElement(
-            "div",
-            { className: "col-md-4 col-xs-12" },
-            React.createElement(
-                "h3",
-                { className: "text-center" },
-                React.createElement("span", { className: "fa " + this.props.className }),
-                "  " + this.props.name
-            ),
-            React.createElement(
-                "p",
-                null,
-                this.props.description
-            )
-        );
-    }
-});
-
-module.exports = InfoColumn;
-
-},{"react":89}],95:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Jumbotron = function (_React$Component) {
-    _inherits(Jumbotron, _React$Component);
-
-    function Jumbotron() {
-        _classCallCheck(this, Jumbotron);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Jumbotron).apply(this, arguments));
-    }
-
-    _createClass(Jumbotron, [{
-        key: "render",
-        value: function render() {
-            var user = this.props.displayName ? "Hello, " + this.props.displayName : "FCC Voting App";
-            var greeting;
-            if (this.props.displayName) {
-                greeting = _react2.default.createElement(
-                    "h3",
-                    null,
-                    "Welcome back! Let's get started with a new Poll!"
-                );
-            } else {
-                greeting = _react2.default.createElement(
-                    "div",
-                    null,
-                    _react2.default.createElement(
-                        "p",
-                        null,
-                        "Login or Register with:"
-                    ),
-                    _react2.default.createElement(
-                        "a",
-                        { href: "/auth/github", className: "btn btn-custom-darken" },
-                        _react2.default.createElement("span", { className: "fa fa-github", alt: "github logo" }),
-                        " Github"
-                    )
-                );
-            }
-            var avatar = this.props.avatar ? _react2.default.createElement("img", { className: "avatar img-circle", src: this.props.avatar }) : _react2.default.createElement("span", { className: "fa fa-free-code-camp" });
-            return _react2.default.createElement(
-                "div",
-                { className: "container" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "jumbotron text-center" },
-                    _react2.default.createElement(
-                        "h1",
-                        null,
-                        avatar,
-                        " ",
-                        user
-                    ),
-                    greeting
-                )
-            );
-        }
-    }]);
-
-    return Jumbotron;
-}(_react2.default.Component);
-
-exports.default = Jumbotron;
-
-},{"react":89}],96:[function(require,module,exports){
+},{"react":89}],91:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19176,383 +18759,14 @@ var Nav = function (_React$Component) {
 
 exports.default = Nav;
 
-},{"react":89,"react-router":29}],97:[function(require,module,exports){
+},{"react":89,"react-router":29}],92:[function(require,module,exports){
 "use strict";
 
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require("react-router");
-
-var _jquery = require("jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _ChartFunctions = require("./ChartFunctions");
-
-var _BarChart = require("./BarChart");
-
-var _BarChart2 = _interopRequireDefault(_BarChart);
-
-var _BarChartRS = require("./BarChartRS");
-
-var _BarChartRS2 = _interopRequireDefault(_BarChartRS);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Poll = _react2.default.createClass({
-    displayName: "Poll",
-
-    getInitialState: function getInitialState() {
-        return {
-            id: this.props.id,
-            poll: this.props.poll,
-
-            userId: '',
-            owner: false,
-            chart: true,
-            option: '',
-            customOption: '',
-            addCustom: false,
-            auth: false,
-            baseURL: ''
-        };
-    },
-
-    handleVote: function handleVote() {
-        var obj = {};
-        obj.option = this.state.option;
-        obj._id = this.state.poll._id;
-        this.props.vote(obj);
-        this.setState({ addCustom: false });
-    },
-
-    getUser: function getUser() {
-        _jquery2.default.ajax({
-            url: '/api/me',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                this.setState({ auth: true, userId: data._id }); //Verify registered user
-                if (this.state.poll.author == data._id) {
-                    //Determine if User created the poll
-                    this.setState({
-                        owner: true
-                    });
-                }
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/api/me', status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    handleDelete: function handleDelete() {
-        this.props.del(this.state.poll._id);
-    },
-
-    handleOption: function handleOption(e) {
-        this.setState({ option: e.target.value });
-    },
-
-    handleCustomInput: function handleCustomInput(e) {
-        this.setState({
-            customOption: e.target.value,
-            option: e.target.value
-        });
-    },
-
-    cancelCustom: function cancelCustom() {
-        this.setState({
-            customOption: '',
-            addCustom: false
-        });
-    },
-
-    toggleCustom: function toggleCustom() {
-        this.setState({ addCustom: true });
-    },
-
-    toggleChart: function toggleChart() {
-        this.setState({ chart: this.state.chart ? false : true });
-    },
-
-    componentDidMount: function componentDidMount() {
-        var thisURLSplit = window.location.href.split('/');
-        var baseURL = thisURLSplit[2];
-        this.setState({ baseURL: 'https://' + baseURL });
-        this.setState({ option: this.state.poll.options[0].text });
-        this.getUser();
-    },
-
-    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-        this.setState({ poll: newProps.poll });
-        this.setState({ option: newProps.poll.options[0].text });
-        this.getUser();
-    },
-
-    render: function render() {
-        var optionNodes = this.state.poll.options.map(function (option, i) {
-            return _react2.default.createElement(
-                "li",
-                { key: i },
-                option.text,
-                ": ",
-                option.votes
-            );
-        });
-
-        var dataViz = this.state.chart ? _react2.default.createElement(
-            "div",
-            { className: "dataViz col-xs-8", onClick: this.toggleChart },
-            _react2.default.createElement(
-                "p",
-                { className: "text-center" },
-                "Click to toggle Chart view"
-            ),
-            _react2.default.createElement(_BarChartRS2.default, { className: "center-block", poll: this.state.poll, width: 600, height: 300, margin: 20 })
-        ) : _react2.default.createElement(
-            "div",
-            { className: "dataViz col-xs-8", onClick: this.toggleChart },
-            _react2.default.createElement(
-                "p",
-                { className: "text-center" },
-                "Click to toggle Chart view"
-            ),
-            _react2.default.createElement(
-                "ul",
-                null,
-                optionNodes
-            )
-        );
-
-        var vote = this.state.poll.options.map(function (opt, i) {
-            return _react2.default.createElement(
-                "option",
-                { key: i, value: opt.text },
-                opt.text
-            );
-        });
-
-        //Delete button
-        var delButton = this.state.owner ? _react2.default.createElement("input", { id: "del", type: "button", className: "col-xs-12 btn btn-danger", value: "Delete", onClick: this.handleDelete }) : _react2.default.createElement("input", { id: "del", type: "button", className: "col-xs-12 btn btn-danger hidden", value: "Delete" });
-
-        //Custom option
-        var customVB = this.state.addCustom && this.state.customOption ? //Custom Vote Button
-        _react2.default.createElement(
-            "span",
-            { className: "btn btn-primary col-xs-4", onClick: this.handleVote },
-            "Vote"
-        ) : _react2.default.createElement(
-            "span",
-            { className: "btn btn-primary disabled col-xs-4" },
-            "Vote"
-        );
-        var custom = this.state.addCustom ? _react2.default.createElement(
-            "div",
-            { className: "form-group" },
-            _react2.default.createElement("input", { className: "form-control col-xs-8", type: "text", placeholder: "Custom Option", value: this.state.customOption, onChange: this.handleCustomInput }),
-            _react2.default.createElement(
-                "span",
-                { className: "btn btn-danger col-xs-4", onClick: this.cancelCustom },
-                "Cancel"
-            ),
-            customVB
-        ) : _react2.default.createElement(
-            "h5",
-            { onClick: this.toggleCustom },
-            "Click here to create your own option"
-        );
-        var noAuth = _react2.default.createElement("span", null);
-        var showCustom = this.state.auth ? custom : noAuth;
-
-        //Twitter share button
-        var tweetString = "https://twitter.com/intent/tweet?text=Hey, check out my new poll. " + this.state.poll.title + "&url=" + this.state.baseURL + "/poll/" + this.state.poll._id;
-        var tweet = encodeURI(tweetString);
-
-        return _react2.default.createElement(
-            "div",
-            { className: "col-xs-12" },
-            _react2.default.createElement(
-                "div",
-                { className: "panel panel-default" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "panel-heading" },
-                    _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: "/poll/" + this.state.poll._id },
-                        _react2.default.createElement(
-                            "h4",
-                            { className: "panel-title" },
-                            this.state.poll.title
-                        )
-                    )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "panel-body" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "row" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-xs-3" },
-                            showCustom,
-                            _react2.default.createElement(
-                                "select",
-                                { className: "col-xs-12", ref: "select", onChange: this.handleOption },
-                                vote
-                            )
-                        ),
-                        dataViz
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "row" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-xs-3" },
-                            _react2.default.createElement("input", { id: "vote",
-                                type: "button",
-                                className: "col-xs-12 btn btn-primary",
-                                value: "Vote",
-                                onClick: this.handleVote
-                            }),
-                            _react2.default.createElement(
-                                "a",
-                                { href: tweet, className: "col-xs-12 btn btn-twitter " },
-                                _react2.default.createElement("span", { className: "fa fa-twitter-square", alt: "twitter logo" }),
-                                " Twitter"
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-xs-8" },
-                            delButton
-                        )
-                    )
-                )
-            )
-        );
-    }
+Object.defineProperty(exports, "__esModule", {
+    value: true
 });
 
-module.exports = Poll;
-
-},{"./BarChart":90,"./BarChartRS":91,"./ChartFunctions":92,"jquery":2,"react":89,"react-router":29}],98:[function(require,module,exports){
-'use strict';
-
-var React = require("react");
-
-var PollForm = React.createClass({
-  displayName: 'PollForm',
-
-  getInitialState: function getInitialState() {
-    return {
-      title: '',
-      options: [{
-        text: ''
-      }, {
-        text: ''
-      }]
-    };
-  },
-
-  handleTitleInput: function handleTitleInput(e) {
-    this.setState({
-      title: e.target.value
-    });
-  },
-
-  handleOptionInput: function handleOptionInput(i, e) {
-    var newOptions = JSON.parse(JSON.stringify(this.state.options));
-    newOptions[i].text = e.target.value;
-    this.setState({
-      options: newOptions
-    });
-  },
-
-  addInputs: function addInputs() {
-    var newOptions = JSON.parse(JSON.stringify(this.state.options));
-    newOptions.push({ text: '' });
-    this.setState({
-      options: newOptions
-    });
-  },
-
-  removeInputs: function removeInputs() {
-    var newOptions = JSON.parse(JSON.stringify(this.state.options));
-    newOptions.pop();
-    this.setState({
-      options: newOptions
-    });
-  },
-
-  handleSubmit: function handleSubmit() {
-    var title = JSON.parse(JSON.stringify(this.state.title));
-    var options = JSON.parse(JSON.stringify(this.state.options));
-    var obj = {};
-    obj.title = title;
-    obj.options = options;
-    this.props.submit(obj);
-    this.setState({ title: '', options: [{ text: '' }, { text: '' }] });
-  },
-
-  render: function render() {
-    var _this = this;
-
-    var inputNodes = this.state.options.map(function (input, i) {
-      return React.createElement(
-        'div',
-        { className: 'form-group', key: i },
-        React.createElement(
-          'label',
-          { htmlFor: "Input" + (i + 1) },
-          "Poll Item " + (i + 1)
-        ),
-        React.createElement('input', {
-          className: 'form-control input-lg',
-          id: "Input" + (i + 1),
-          type: 'text',
-          value: _this.state.options[i].text,
-          onChange: _this.handleOptionInput.bind(_this, i),
-          placeholder: "Poll Item " + (i + 1)
-        })
-      );
-    });
-    return React.createElement(
-      'div',
-      { className: 'container well' },
-      React.createElement(
-        'h3',
-        { className: 'text-center' },
-        'Create your New Poll'
-      ),
-      React.createElement(
-        'form',
-        null,
-        React.createElement('input', { type: 'text', className: 'form-control input-lg', value: this.state.title, placeholder: 'Title', onChange: this.handleTitleInput }),
-        inputNodes,
-        React.createElement(
-          'label',
-          null,
-          'Adjust Number of Options'
-        ),
-        React.createElement('br', null),
-        React.createElement('input', { type: 'button', className: 'btn btn-primary', value: '+', onClick: this.addInputs }),
-        React.createElement('input', { type: 'button', className: 'btn btn-danger', value: '-', onClick: this.removeInputs }),
-        React.createElement('input', { type: 'button', className: 'btn btn-success pull-right', value: 'Create Poll', onClick: this.handleSubmit })
-      )
-    );
-  }
-});
-
-module.exports = PollForm;
-
-},{"react":89}],99:[function(require,module,exports){
-"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
@@ -19566,262 +18780,82 @@ var _Footer = require("./Footer");
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _Jumbotron = require("./Jumbotron");
-
-var _Jumbotron2 = _interopRequireDefault(_Jumbotron);
-
-var _Subotron = require("./Subotron");
-
-var _Subotron2 = _interopRequireDefault(_Subotron);
-
-var _Poll = require("./Poll");
-
-var _Poll2 = _interopRequireDefault(_Poll);
-
-var _InfoColumn = require("./InfoColumn");
-
-var _InfoColumn2 = _interopRequireDefault(_InfoColumn);
-
-var _PollForm = require("./PollForm");
-
-var _PollForm2 = _interopRequireDefault(_PollForm);
-
-var _reactRouter = require("react-router");
-
 var _jquery = require("jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ReactApp = _react2.default.createClass({
-    displayName: "ReactApp",
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    getInitialState: function getInitialState() {
-        return {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ReactApp = function (_React$Component) {
+    _inherits(ReactApp, _React$Component);
+
+    function ReactApp() {
+        _classCallCheck(this, ReactApp);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReactApp).call(this));
+
+        _this.state = {
             user: {},
             username: '',
             auth: false,
-            polls: [],
             avatar: '',
-            addPoll: false
+            polls: []
         };
-    },
+        return _this;
+    }
 
-    getUser: function getUser() {
-        _jquery2.default.ajax({
-            url: '/api/me',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                this.setState({
-                    user: data,
-                    displayName: data.github.displayName,
-                    username: data.github.username,
-                    avatar: data.github.avatar,
-                    auth: true
-                });
-                this.loadPolls();
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/api/me', status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    loadPolls: function loadPolls() {
-        if (!this.state.username) {
-            return;
+    _createClass(ReactApp, [{
+        key: "getUser",
+        value: function getUser() {
+            _jquery2.default.ajax({
+                url: '/api/me',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    this.setState({
+                        user: data,
+                        displayName: data.github.displayName,
+                        username: data.github.username,
+                        avatar: data.github.avatar,
+                        auth: true
+                    });
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    console.error('/api/me', status, err.toString());
+                }.bind(this)
+            });
         }
-        _jquery2.default.ajax({
-            url: '/api/' + this.state.username + '/polls',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                console.log('Loaded!');
-                this.setState({
-                    polls: data
-                });
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/' + this.state.user.github.username + '/polls', status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    addNewPoll: function addNewPoll(obj) {
-        var poll = obj;
-        _jquery2.default.ajax({
-            url: '/api/newpoll',
-            dataType: 'json',
-            type: 'POST',
-            data: poll,
-            success: function (data) {
-                this.loadPolls();
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/' + this.state.user.github.username + '/polls', status, err.toString());
-            }.bind(this)
-        });
-        this.setState({ addPoll: false });
-    },
-
-    handleVote: function handleVote(obj) {
-        _jquery2.default.ajax({
-            url: "/api/vote/" + obj._id,
-            dataType: 'json',
-            type: 'POST',
-            data: obj,
-            success: function (data) {
-                this.loadPolls();
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error("/api/vote/" + obj._id, status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    deletePoll: function deletePoll(id) {
-        _jquery2.default.ajax({
-            url: '/api/delete/' + id,
-            type: 'DELETE',
-            success: function (data) {
-                this.loadPolls();
-            }.bind(this),
-            error: function (xhr, status, err) {
-                console.error('/api/' + id + '/delete', status, err.toString());
-            }.bind(this)
-        });
-    },
-
-    showForm: function showForm() {
-        this.setState({ addPoll: true });
-    },
-
-    cancelForm: function cancelForm() {
-        this.setState({ addPoll: false });
-    },
-
-    componentDidMount: function componentDidMount() {
-        this.getUser();
-        this.loadPolls();
-    },
-
-    render: function render() {
-        var _this = this;
-
-        var form;
-        if (this.state.addPoll) {
-            form = _react2.default.createElement(
+    }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            this.getUser();
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
                 "div",
                 null,
+                _react2.default.createElement(_Nav2.default, { avatar: this.state.avatar }),
                 _react2.default.createElement(
-                    "h3",
-                    { className: "text-center" },
-                    "Click button to cancel. ",
-                    _react2.default.createElement(
-                        "span",
-                        { className: "btn btn-danger", onClick: this.cancelForm },
-                        "Cancel Poll"
-                    )
+                    "main",
+                    null,
+                    this.props.children
                 ),
-                _react2.default.createElement(_PollForm2.default, { submit: this.addNewPoll })
-            );
-        } else {
-            form = _react2.default.createElement(
-                "div",
-                { className: "col-xs-12" },
-                _react2.default.createElement(
-                    "h3",
-                    { className: "text-center" },
-                    "Here are your polls. Click button to add additional polls. ",
-                    _react2.default.createElement(
-                        "span",
-                        { className: "btn btn-primary", onClick: this.showForm },
-                        "Add Poll"
-                    )
-                )
+                _react2.default.createElement(_Footer2.default, null)
             );
         }
+    }]);
 
-        var pollNodes = this.state.polls.map(function (poll, i) {
-            return _react2.default.createElement(_Poll2.default, { poll: poll, key: i, del: _this.deletePoll, vote: _this.handleVote });
-        });
-        var all = _react2.default.createElement(
-            "div",
-            { className: "col-xs-12" },
-            _react2.default.createElement(
-                "h3",
-                { className: "text-center" },
-                "Welcome, please register or log in. Click button view all polls. ",
-                _react2.default.createElement(
-                    _reactRouter.Link,
-                    { to: "polls", type: "button", className: "btn btn-default" },
-                    "View Polls"
-                )
-            )
-        );
-        var subheading = this.state.auth ? form : all;
-        return _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(_Nav2.default, { avatar: this.state.avatar }),
-            _react2.default.createElement(_Jumbotron2.default, { displayName: this.state.displayName }),
-            _react2.default.createElement(
-                "div",
-                { className: "container" },
-                subheading
-            ),
-            _react2.default.createElement(
-                "div",
-                { className: "container" },
-                pollNodes
-            ),
-            _react2.default.createElement(_Footer2.default, null)
-        );
-    }
-});
+    return ReactApp;
+}(_react2.default.Component);
 
-module.exports = ReactApp;
+exports.default = ReactApp;
 
-},{"./Footer":93,"./InfoColumn":94,"./Jumbotron":95,"./Nav":96,"./Poll":97,"./PollForm":98,"./Subotron":100,"jquery":2,"react":89,"react-router":29}],100:[function(require,module,exports){
-"use strict";
-
-var React = require("react");
-
-var Subotron = React.createClass({
-    displayName: "Subotron",
-
-    render: function render() {
-        var polls = this.props.polls;
-        var pollNodes = polls.map(function (poll, i) {
-            return React.createElement(
-                "li",
-                { key: i },
-                React.createElement(
-                    "a",
-                    { href: '/' + poll._id },
-                    React.createElement(
-                        "h4",
-                        null,
-                        poll.title
-                    )
-                )
-            );
-        });
-        return React.createElement(
-            "div",
-            { className: "container well well-lg" },
-            React.createElement(
-                "h2",
-                { className: "text-center" },
-                "Here is a list of your polls. Click ADD to add an additional poll."
-            ),
-            pollNodes
-        );
-    }
-});
-
-module.exports = Subotron;
-
-},{"react":89}]},{},[99]);
+},{"./Footer":90,"./Nav":91,"jquery":2,"react":89}]},{},[92]);

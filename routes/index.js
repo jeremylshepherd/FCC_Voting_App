@@ -8,10 +8,6 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var User = require('../models/Users');
 var Poll = require('../models/Polls');
-var React = require("react");
-var ReactDOMServer = require("react-dom/server");
-var ReactApp = require("../views/Components/ReactApp");
-var PollPage = require("../views/Components/PollPage");
 var passport = require("passport");
 
 require("../config/passport");
@@ -139,9 +135,6 @@ router.delete('/api/delete/:poll', isLoggedIn, (req, res) => {
 
 
 router.get('*', (req, res) => {
-    var reactString = ReactDOMServer.renderToString(
-        React.createElement(ReactApp)
-    );
     res.render('index.ejs');
 });
 

@@ -1,116 +1,121 @@
 import React from "react";
-import {Router, Route, Link}  from "react-router";
-import $     from 'jquery';
-import {rect, line, text} from "./ChartFunctions";
-import BarChart from './BarChart';
+import {Link}  from "react-router";
 import BarChartRS from './BarChartRS';
 
-var Poll = React.createClass({
-    getInitialState: function() {
-        return ({
+export default class Poll extends React.Component {
+    constructor(props){
+        super(props); 
+        this.state = {
             id: this.props.id,
             poll: this.props.poll,
-            
-            userId: '',
-            owner: false,
+            owner: this.props.owner,
             chart: true,
             option: '',
             customOption: '',
             addCustom: false,
-            auth: false,
             baseURL: ''
-        });
-    },
+        };
+        
+        this.getOwner = this.getOwner.bind(this);
+        this.toggleChart = this.toggleChart.bind(this);
+        this.handleVote = this.handleVote.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.cancelCustom = this.cancelCustom.bind(this);
+        this.handleOption = this.handleOption.bind(this);
+        this.toggleCustom = this.toggleCustom.bind(this);
+        this.handleOption = this.handleOption.bind(this);
+        this.handleCustomInput = this.handleCustomInput.bind(this);
+    }
     
-    handleVote: function() {
+    getOwner() {
+        if(this.props.owner) {
+            this.setState({
+               owner: true 
+            });
+        }
+    }
+    
+    handleVote() {
         let obj = {};
         obj.option = this.state.option;
         obj._id = this.state.poll._id;
         this.props.vote(obj);
-         this.setState({addCustom: false});
-    },
+        this.cancelCustom();
+    }
     
-    getUser: function() {
-        $.ajax({
-          url: '/api/me',
-          dataType: 'json',
-          cache: false,
-          success: function(data) {
-              this.setState({auth: true, userId: data._id}); //Verify registered user
-              if(this.state.poll.author == data._id){ //Determine if User created the poll
-                this.setState({
-                    owner: true    
-                });
-              }
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error('/api/me', status, err.toString());
-          }.bind(this)
-        });
-    },
-    
-    handleDelete: function() {
+    handleDelete() {
         this.props.del(this.state.poll._id);  
-    },
+    }
     
-    handleOption: function(e) {
+    handleOption(e) {
         this.setState({option: e.target.value});
-    },
+    }
     
-    handleCustomInput: function(e) {
+    handleCustomInput(e) {
         this.setState({
             customOption: e.target.value,
             option: e.target.value 
         });
-    },
+    }
     
-    cancelCustom: function() {
+    cancelCustom() {
         this.setState({
             customOption: '',
             addCustom: false
         });
-    },
+    }
     
-    toggleCustom: function() {
+    toggleCustom() {
         this.setState({addCustom: true});
-    },
+    }
     
-    toggleChart: function() {
-        this.setState({chart: this.state.chart ? false : true});
-    },
+    toggleChart() {
+        this.setState({chart: !this.state.chart});
+    }
     
-    componentDidMount: function() {
+    componentDidMount() {
         let thisURLSplit = window.location.href.split('/');
         let baseURL = thisURLSplit[2];
+        this.getOwner();
         this.setState({baseURL: 'https://' + baseURL});
         this.setState({option: this.state.poll.options[0].text});
-        this.getUser();
-    },
+    }
     
-    componentWillReceiveProps: function(newProps) {
+    componentWillReceiveProps(newProps) {
         this.setState({poll : newProps.poll});
+        this.getOwner();
+        this.setState({_id: newProps._id});
         this.setState({option: newProps.poll.options[0].text});
-        this.getUser();
-    },
+    }
     
-    render: function() {
-        let optionNodes = this.state.poll.options.map((option, i) => {
+    componentUnmount() {
+        this.getOwner();
+    }
+    
+    render() {
+        let VoteList = this.state.poll.options.map((option, i) => {
             return (
                 <li key={i}>{option.text}: {option.votes}</li>  
             );
         });
         
-        let dataViz = this.state.chart ? 
-            (<div className="dataViz col-xs-8" onClick={this.toggleChart}>
+        let Chart = (
+            <div className="dataViz col-xs-8" onClick={this.toggleChart}>
                 <p className="text-center">Click to toggle Chart view</p>
-                <BarChartRS className='center-block' poll={this.state.poll} width={600} height={300} margin={20}/>
-            </div>) : 
-            (<div className="dataViz col-xs-8" onClick={this.toggleChart}>
+                <BarChartRS className='center-block' ref={`div${this.state.poll._id}`} poll={this.state.poll} width={600} height={300} margin={20}/>
+            </div>
+        );
+        
+        let List = (
+            <div className="dataViz col-xs-8" onClick={this.toggleChart}>
                 <p className="text-center">Click to toggle Chart view</p>
-                <ul>{optionNodes}</ul>
-            </div>);
+                <ul>{VoteList}</ul>
+            </div>
+        );
+        
+        let dataViz = this.state.chart ? Chart : List;
             
-        let vote = this.state.poll.options.map((opt, i) => {
+        let optionNodes = this.state.poll.options.map((opt, i) => {
             return (
                 <option key={i} value={opt.text}>{opt.text}</option>
             );
@@ -125,6 +130,7 @@ var Poll = React.createClass({
         let customVB = this.state.addCustom && this.state.customOption ?        //Custom Vote Button
             <span className="btn btn-primary col-xs-4" onClick={this.handleVote}>Vote</span> :
             <span className="btn btn-primary disabled col-xs-4">Vote</span>;
+        
         let custom = this.state.addCustom ? 
             (
                 <div className="form-group">
@@ -135,11 +141,11 @@ var Poll = React.createClass({
             ) : 
             (<h5 onClick={this.toggleCustom}>Click here to create your own option</h5>);
         let noAuth = <span></span>;
-        let showCustom = this.state.auth ? custom : noAuth;
+        let showCustom = this.props.auth ? custom : noAuth;
         
         //Twitter share button
-            let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
-            let tweet = encodeURI(tweetString);
+        let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
+        let tweet = encodeURI(tweetString);
         
         return (
             <div className="col-xs-12">
@@ -154,7 +160,7 @@ var Poll = React.createClass({
                             <div className="col-xs-3">
                                 {showCustom}
                                 <select className="col-xs-12" ref="select" onChange={this.handleOption}>
-                                    {vote}
+                                    {optionNodes}
                                 </select>
                             </div>
                             {dataViz}
@@ -180,6 +186,4 @@ var Poll = React.createClass({
             </div>
         );
     }
-});
-
-module.exports = Poll;
+}

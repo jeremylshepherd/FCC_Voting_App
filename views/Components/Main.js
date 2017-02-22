@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import Jumbotron from "./Jumbotron";
-import Poll from './Poll_es6';
-import PollForm from "./PollForm_es6";
+import Poll from './Poll';
+import PollForm from "./PollForm";
 import {Link} from 'react-router';
 import $ from "jquery";
 
-export default class Main extends Component {
+export default class Main extends React.Component {
     constructor(props) {
         super(props);
          this.state ={
