@@ -1,6 +1,9 @@
 import React from "react";
 import {Link}  from "react-router";
 import BarChartRS from './BarChartRS';
+import ConfirmModal from './ConfirmModal';
+import $ from 'jquery';
+import boot$ from "bootstrap-jquery";
 
 export default class Poll extends React.Component {
     constructor(props){
@@ -123,7 +126,7 @@ export default class Poll extends React.Component {
         
         //Delete button
         let delButton = this.state.owner ? 
-            (<input id="del" type="button" className="col-xs-12 btn btn-danger" value="Delete" onClick={this.handleDelete}/>) : 
+            (<input id="del" type="button" className="col-xs-12 btn btn-danger" value="Delete" data-toggle="modal" data-target={`#poll${this.state.poll._id}`}/>) : 
             (<input id="del" type="button" className="col-xs-12 btn btn-danger hidden" value="Delete"/>);
         
         //Custom option
@@ -146,39 +149,41 @@ export default class Poll extends React.Component {
         //Twitter share button
         let tweetString = `https://twitter.com/intent/tweet?text=Hey, check out my new poll. ${this.state.poll.title}&url=${this.state.baseURL}/poll/${this.state.poll._id}`;
         let tweet = encodeURI(tweetString);
-        
         return (
-            <div className="col-xs-12">
-                <div className="panel panel-default">
-                    <div className="panel-heading">
-                        <Link to={`/poll/${this.state.poll._id}`}>
-                            <h4 className="panel-title">{this.state.poll.title}</h4>
-                        </Link>
-                    </div>
-                    <div className="panel-body">
-                        <div className="row">
-                            <div className="col-xs-3">
-                                {showCustom}
-                                <select className="col-xs-12" ref="select" onChange={this.handleOption}>
-                                    {optionNodes}
-                                </select>
-                            </div>
-                            {dataViz}
+            <div>
+                <ConfirmModal pollId={`poll${this.state.poll._id}`} delete={this.handleDelete.bind(this)} />
+                <div className="col-xs-12">
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <Link to={`/poll/${this.state.poll._id}`}>
+                                <h4 className="panel-title">{this.state.poll.title}</h4>
+                            </Link>
                         </div>
-                        <div className="row">
-                            <div className="col-xs-3">
-                                <input id="vote" 
-                                    type="button" 
-                                    className="col-xs-12 btn btn-primary" 
-                                    value="Vote" 
-                                    onClick={this.handleVote}
-                                />
-                                <a href={tweet} className="col-xs-12 btn btn-twitter ">
-                                    <span className="fa fa-twitter-square" alt="twitter logo"></span> Twitter
-                                </a>
+                        <div className="panel-body">
+                            <div className="row">
+                                <div className="col-xs-3">
+                                    {showCustom}
+                                    <select className="col-xs-12" ref="select" onChange={this.handleOption}>
+                                        {optionNodes}
+                                    </select>
+                                </div>
+                                {dataViz}
                             </div>
-                            <div className="col-xs-8">
-                                {delButton}
+                            <div className="row">
+                                <div className="col-xs-3">
+                                    <input id="vote" 
+                                        type="button" 
+                                        className="col-xs-12 btn btn-primary" 
+                                        value="Vote" 
+                                        onClick={this.handleVote}
+                                    />
+                                    <a href={tweet} className="col-xs-12 btn btn-twitter ">
+                                        <span className="fa fa-twitter-square" alt="twitter logo"></span> Twitter
+                                    </a>
+                                </div>
+                                <div className="col-xs-8">
+                                    {delButton}
+                                </div>
                             </div>
                         </div>
                     </div>

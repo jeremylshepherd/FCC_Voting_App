@@ -81,7 +81,6 @@ export default class PollPage extends React.Component {
           type: 'POST',
           data: obj,
           success: function(data) {
-            console.log('PollPage',JSON.stringify(data, null, 2));
             this.getPoll();
           }.bind(this),
           error: function(xhr, status, err) {
