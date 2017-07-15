@@ -5,5 +5,5 @@ Built using Express, MongoDB(Mongoose), React, React-router, Node.
 
 Register/Login using Github
 
-![ScreenShot](Screenshot Logged.png)
-![ScreenShot](ScreenShot Unlogged.png)
+![ScreenShot](Screenshot_Logged.png)
+![ScreenShot](ScreenShot_Unlogged.png)
