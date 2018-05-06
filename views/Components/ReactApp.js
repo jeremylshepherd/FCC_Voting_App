@@ -44,7 +44,7 @@ export default class ReactApp extends React.Component {
     render() {
         return (
             <div>
-                <Nav avatar={this.state.avatar}/>
+                <Nav avatar={this.state.avatar} name={this.state.displayName}/>
                     <main>
                         {this.props.children}
                     </main>

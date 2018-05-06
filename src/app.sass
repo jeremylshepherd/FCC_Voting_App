@@ -5,8 +5,14 @@
 @import "_logo-svg"
 @import "_modal"
 
+$text-color: #eee
+$text-hover: #bbb
+
 body
   padding-bottom: 70px
+
+select
+  font-size: 2rem
 
 a,
 a:hover
@@ -16,14 +22,55 @@ a:hover
 li
   list-style: none
 
+.navbar-brand
+  display: flex
+  align-items: center
+
 .navbar-inverse
   .navbar-brand,
   .navbar-text,
   .navbar-nav
-    color: #ccc
+    color: $text-color
+    &>li
+      color: $text-color
+      margin-left: 40px
+      padding: 0
+      &>a
+        color: $text-color
+        &:hover
+          color: $text-hover
 
-.navbar-text
-  margin-bottom: 0
+.navbar-inverse
+  .navbar-toggle
+      border: 0
+      transform: rotate(0)
+      transition: all 0.25s ease-in-out
+      &:focus,
+      &:hover
+        background-color: transparent
+      .icon-bar
+        transition: all 0.3s ease-in-out
+        height: 4px
+        margin-left: 12.5%
+      .ib-top
+        transform: rotate(45deg)
+        transform-origin: 0% 50%
+      .ib-mid
+        opacity: 0
+      .ib-bot
+        transform: rotate(-45deg)
+        transform-origin: 0% 50%
+      &.collapsed
+        transform: rotate(-180deg)      
+        .icon-bar
+          height: 2px
+          margin-left: 0
+        .ib-top
+          transform: rotate(0)
+        .ib-mid
+          opacity: 1
+        .ib-bot
+          transform: rotate(0)     
 
 .fa-free-code-camp
   color: #fff
@@ -36,19 +83,56 @@ li
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8)
 
 .icon
-  width: 30px
+  width: 40px
   
 .avatar
   width: 60px
+.avatar-text
+  display: none
   
 .dataViz
-  height: 360px
-
-.navbar
-  .btn
-    margin-top: 10px
-
+  min-height: 35%
+  margin: 10px
+  
 .hidden
   display: none
   
+@media screen and (min-width: 768px)
+  .navbar
+    ul
+      display: flex
+      align-items: center
   
+@media screen and (max-width: 767px)
+  
+  .navbar
+    ul
+      margin-left: -55px
+      display: flex
+      align-items: stretch
+      flex-direction: column
+  
+  .navbar-nav
+    li
+      display: block
+      text-align: center
+  
+  .avatar-text
+    display: initial
+  
+  .btn
+    margin-top: 3px
+  
+  .btn-danger,
+  .btn-default,
+  .btn-primary,
+  .btn-link,
+  .btn-custom-darken,
+  .btn-twitter
+    display: block
+    width: 100%
+    
+  .dataViz
+    margin-top: 5px
+    margin-bottom: 5px
+    

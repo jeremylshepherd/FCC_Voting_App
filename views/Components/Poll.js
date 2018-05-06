@@ -103,7 +103,7 @@ export default class Poll extends React.Component {
         });
         
         let Chart = (
-            <div className="dataViz col-xs-8" onClick={this.toggleChart}>
+            <div className="dataViz col-md-8 col-sm-12" onClick={this.toggleChart}>
                 <p className="text-center">Click to toggle Chart view</p>
                 <BarChartRS className='center-block' ref={`div${this.state.poll._id}`} poll={this.state.poll} width={600} height={300} margin={20}/>
             </div>
@@ -161,7 +161,7 @@ export default class Poll extends React.Component {
                         </div>
                         <div className="panel-body">
                             <div className="row">
-                                <div className="col-xs-3">
+                                <div className="col-md-3 col-sm-12">
                                     {showCustom}
                                     <select className="col-xs-12" ref="select" onChange={this.handleOption}>
                                         {optionNodes}
@@ -170,10 +170,10 @@ export default class Poll extends React.Component {
                                 {dataViz}
                             </div>
                             <div className="row">
-                                <div className="col-xs-3">
+                                <div className="col-md-3 col-xs-12">
                                     <input id="vote" 
                                         type="button" 
-                                        className="col-xs-12 btn btn-primary" 
+                                        className="col-sm-12 btn btn-primary" 
                                         value="Vote" 
                                         onClick={this.handleVote}
                                     />
@@ -181,7 +181,7 @@ export default class Poll extends React.Component {
                                         <span className="fa fa-twitter-square" alt="twitter logo"></span> Twitter
                                     </a>
                                 </div>
-                                <div className="col-xs-8">
+                                <div className="col-md-8 col-sm-12">
                                     {delButton}
                                 </div>
                             </div>
