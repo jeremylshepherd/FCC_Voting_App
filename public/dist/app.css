@@ -255,7 +255,11 @@ li {
 
 .navbar-brand {
   display: flex;
+  min-width: 220px;
+  font-size: 1.85vh;
   align-items: center; }
+  .navbar-brand .nb-text {
+    margin-left: 1rem; }
 
 .navbar-inverse .navbar-brand,
 .navbar-inverse .navbar-text,
@@ -275,6 +279,16 @@ li {
       .navbar-inverse .navbar-text > li > a:hover,
       .navbar-inverse .navbar-nav > li > a:hover {
         color: #bbb; }
+    .navbar-inverse .navbar-brand > li .btn-danger,
+    .navbar-inverse .navbar-text > li .btn-danger,
+    .navbar-inverse .navbar-nav > li .btn-danger {
+      background-color: #ac2925;
+      border-color: #ac2925; }
+      .navbar-inverse .navbar-brand > li .btn-danger:hover,
+      .navbar-inverse .navbar-text > li .btn-danger:hover,
+      .navbar-inverse .navbar-nav > li .btn-danger:hover {
+        background-color: rgba(172, 41, 37, 0.75);
+        border-color: #ac2925; }
 
 .navbar-inverse .navbar-toggle {
   border: 0;
@@ -317,7 +331,8 @@ li {
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.8); }
 
 .icon {
-  width: 40px; }
+  width: 40px;
+  margin: -12.5px; }
 
 .avatar {
   width: 60px; }
@@ -343,6 +358,10 @@ li {
     display: flex;
     align-items: stretch;
     flex-direction: column; }
+    .navbar ul .icon {
+      display: none; }
+  .navbar .navbar-brand {
+    font-size: 2.65vh; }
   .navbar-nav li {
     display: block;
     text-align: center; }

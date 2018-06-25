@@ -24,7 +24,11 @@ li
 
 .navbar-brand
   display: flex
+  min-width: 220px
+  font-size: 1.85vh
   align-items: center
+  .nb-text
+    margin-left: 1rem
 
 .navbar-inverse
   .navbar-brand,
@@ -39,6 +43,12 @@ li
         color: $text-color
         &:hover
           color: $text-hover
+      .btn-danger
+        background-color: rgb(172, 41, 37)
+        border-color: rgb(172, 41, 37)
+        &:hover
+          background-color: rgba(172, 41, 37, 0.75)
+          border-color: rgba(172, 41, 37, 1)
 
 .navbar-inverse
   .navbar-toggle
@@ -72,6 +82,7 @@ li
         .ib-bot
           transform: rotate(0)     
 
+
 .fa-free-code-camp
   color: #fff
 
@@ -84,6 +95,7 @@ li
 
 .icon
   width: 40px
+  margin: -12.5px
   
 .avatar
   width: 60px
@@ -102,6 +114,7 @@ li
     ul
       display: flex
       align-items: center
+      
   
 @media screen and (max-width: 767px)
   
@@ -111,6 +124,10 @@ li
       display: flex
       align-items: stretch
       flex-direction: column
+      .icon
+        display: none
+    .navbar-brand
+      font-size: 2.65vh
   
   .navbar-nav
     li

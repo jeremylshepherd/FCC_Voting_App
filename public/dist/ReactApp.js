@@ -18489,6 +18489,18 @@ var Nav = function (_React$Component) {
     }
 
     _createClass(Nav, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var login = this.refs.login;
+            if ("standalone" in window.navigator && window.navigator.standalone) {
+                //console.log('Standalone mode');
+                // login.addEventListener('click', (e) => {
+                //     e.preventDefault();
+                //     window.open(login.href, "Authentication");
+                // });
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
             var icon = this.props.avatar !== '' ? _react2.default.createElement(
@@ -18496,7 +18508,7 @@ var Nav = function (_React$Component) {
                 { className: "nav navbar-nav navbar-right" },
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement(
                         _reactRouter.Link,
                         { to: "/polls" },
@@ -18505,7 +18517,7 @@ var Nav = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement("img", { src: this.props.avatar, className: "navbar-text img-circle icon" }),
                     _react2.default.createElement(
                         "span",
@@ -18515,7 +18527,7 @@ var Nav = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement(
                         "a",
                         { href: "/logout", className: "btn btn-danger" },
@@ -18528,7 +18540,7 @@ var Nav = function (_React$Component) {
                 { className: "nav navbar-nav navbar-right" },
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement(
                         _reactRouter.Link,
                         { to: "/polls" },
@@ -18537,7 +18549,7 @@ var Nav = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement(
                         "span",
                         { className: "navbar-text" },
@@ -18546,10 +18558,10 @@ var Nav = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "li",
-                    { "data-toggle": "collapse" },
+                    null,
                     _react2.default.createElement(
                         "a",
-                        { href: "/auth/github", className: "btn btn-custom-darken" },
+                        { href: "/auth/github", ref: "login", className: "btn btn-custom-darken", "data-pwa-auth": true },
                         _react2.default.createElement("span", { className: "fa fa-github", alt: "github logo" }),
                         " Github"
                     )
@@ -18592,7 +18604,11 @@ var Nav = function (_React$Component) {
                                     "span",
                                     { className: "navbar-brand" },
                                     _react2.default.createElement("i", { className: "fa fa-free-code-camp", "aria-hidden": "true" }),
-                                    '   FCC Voting App'
+                                    _react2.default.createElement(
+                                        "span",
+                                        { className: "nb-text" },
+                                        " FCC Voting App"
+                                    )
                                 )
                             )
                         ),
@@ -18660,6 +18676,9 @@ var ReactApp = function (_React$Component) {
             avatar: '',
             polls: []
         };
+
+        _this.alertiOS = _this.alertiOS.bind(_this);
+        _this.getUser = _this.getUser.bind(_this);
         return _this;
     }
 
@@ -18685,9 +18704,26 @@ var ReactApp = function (_React$Component) {
             });
         }
     }, {
+        key: "alertiOS",
+        value: function alertiOS() {
+            var userAgent = window.navigator.userAgent.toLowerCase();
+            var ios = /iphone|ipod|ipad/.test(userAgent);
+            var auth = document.querySelectorAll('a[data-pwa-auth]');
+            console.log(auth);
+            var alertiOS = function alertiOS(e) {
+                return alert('You are on iOS and will be redirected to the browser. Please use the app there until Apple fixes this bug.');
+            };
+            if ("standalone" in window.navigator && window.navigator.standalone && ios) {
+                for (var i = 0; i < auth.length; i++) {
+                    auth[i].addEventListener('click', alertiOS, false);
+                }
+            }
+        }
+    }, {
         key: "componentDidMount",
         value: function componentDidMount() {
             this.getUser();
+            this.alertiOS();
         }
     }, {
         key: "render",

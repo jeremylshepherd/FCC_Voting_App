@@ -1,0 +1,9 @@
+<script>
+    window.location.href = `https://${window.location.hostname}/auth/github`;
+    var loginForm = document.querySelector('form');
+    loginForm.addEventListener('submit', event => {
+        alert('submit event');
+      event.preventDefault();
+      window.opener.postMessage(event.data, "http://localhost:3000");
+    });
+</script>

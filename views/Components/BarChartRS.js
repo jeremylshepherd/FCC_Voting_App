@@ -110,6 +110,7 @@ export default class BarChartRS extends React.Component {
         let dim = div.getBoundingClientRect();//Dimensions
         ctx = canvas.getContext('2d');
         window.addEventListener('resize', this.handleResize, false);
+        window.addEventListener("orientationchange", this.handleResize, false);
         this.setState({container: {width: dim.width, height: dim.height}});
         if(this.state.container.width < this.props.width){
             this.setState({width: dim.width, height: dim.height});
@@ -121,11 +122,13 @@ export default class BarChartRS extends React.Component {
         let canvas = this.refs[this.props.poll._id];
         ctx = canvas.getContext('2d');
         window.addEventListener('resize', this.handleResize, false);
+        window.addEventListener("orientationchange", this.handleResize, false);
         this.draw();
     }
     
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener("orientationchange", this.handleResize);
     }
     
     handleResize() {

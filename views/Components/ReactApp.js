@@ -15,6 +15,9 @@ export default class ReactApp extends React.Component {
             avatar: '',
             polls: []
         };
+        
+        this.alertiOS = this.alertiOS.bind(this);
+        this.getUser = this.getUser.bind(this);
     }
     
     getUser() {
@@ -37,8 +40,22 @@ export default class ReactApp extends React.Component {
       });
     }
     
+    alertiOS() {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        const ios = /iphone|ipod|ipad/.test(userAgent);
+        const auth = document.querySelectorAll('a[data-pwa-auth]');
+        console.log(auth);
+        const alertiOS = (e) => alert('You are on iOS and will be redirected to the browser. Please use the app there until Apple fixes this bug.');
+        if(("standalone" in window.navigator) && window.navigator.standalone && ios){
+            for(let i = 0; i < auth.length; i++) {
+                auth[i].addEventListener('click', alertiOS,false);
+            }
+        }
+    }
+    
     componentDidMount() {
         this.getUser();
+        this.alertiOS();
     }
 
     render() {

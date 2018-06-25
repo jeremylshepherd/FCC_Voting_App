@@ -10,7 +10,7 @@ export default class Jumbotron extends React.Component {
                 greeting = (
                     <div>
                         <p>Login or Register with:</p>
-                        <a href="/auth/github" className="btn btn-custom-darken"><span className="fa fa-github" alt="github logo"></span> Github</a>
+                        <a href="/auth/github" className="btn btn-custom-darken" data-pwa-auth><span className="fa fa-github" alt="github logo"></span> Github</a>
                     </div>
                 );
             }

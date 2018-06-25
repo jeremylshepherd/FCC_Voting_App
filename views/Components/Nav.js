@@ -2,18 +2,30 @@ import React from "react";
 import {Link} from "react-router";
 
 export default class Nav extends React.Component {
+    
+    componentDidMount() {
+        let login = this.refs.login;
+        if(("standalone" in window.navigator) && window.navigator.standalone){
+            //console.log('Standalone mode');
+            // login.addEventListener('click', (e) => {
+            //     e.preventDefault();
+            //     window.open(login.href, "Authentication");
+            // });
+        }
+    }
+    
     render() {
         let icon = this.props.avatar !== '' ? (
             <ul className="nav navbar-nav navbar-right">
-                <li data-toggle="collapse"><Link to='/polls'>All Polls</Link></li>
-                <li data-toggle="collapse"><img src={this.props.avatar} className="navbar-text img-circle icon"/><span className="avatar-text">{`  Logged in as ${this.props.name}`}</span></li>
-                <li data-toggle="collapse"><a href="/logout" className="btn btn-danger"><span className="fa fa-eject"/> Logout</a></li>
+                <li><Link to='/polls'>All Polls</Link></li>
+                <li><img src={this.props.avatar} className="navbar-text img-circle icon"/><span className="avatar-text">{`  Logged in as ${this.props.name}`}</span></li>
+                <li><a href="/logout" className="btn btn-danger"><span className="fa fa-eject"/> Logout</a></li>
             </ul>
         ) : (
             <ul className="nav navbar-nav navbar-right">
-                <li data-toggle="collapse"><Link to='/polls'>All Polls</Link></li>
-                <li data-toggle="collapse"><span className="navbar-text">Login or Register with:</span></li>
-                <li data-toggle="collapse"><a href="/auth/github" className="btn btn-custom-darken"><span className="fa fa-github" alt="github logo"></span> Github</a></li>
+                <li><Link to='/polls'>All Polls</Link></li>
+                <li><span className="navbar-text">Login or Register with:</span></li>
+                <li><a href="/auth/github" ref="login" className="btn btn-custom-darken" data-pwa-auth><span className="fa fa-github" alt="github logo"></span> Github</a></li>
             </ul>
         );
         return (
@@ -36,7 +48,7 @@ export default class Nav extends React.Component {
                         <Link to='/'>
                             <span className="navbar-brand">
                             <i className="fa fa-free-code-camp" aria-hidden="true"></i>
-                                {'   FCC Voting App'}
+                                <span className="nb-text"> FCC Voting App</span>
                             </span>
                         </Link>
                     </div>
