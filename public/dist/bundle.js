@@ -38214,18 +38214,6 @@ var Nav = function (_React$Component) {
     }
 
     _createClass(Nav, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            var login = this.refs.login;
-            if ("standalone" in window.navigator && window.navigator.standalone) {
-                //console.log('Standalone mode');
-                // login.addEventListener('click', (e) => {
-                //     e.preventDefault();
-                //     window.open(login.href, "Authentication");
-                // });
-            }
-        }
-    }, {
         key: "render",
         value: function render() {
             var icon = this.props.avatar !== '' ? _react2.default.createElement(

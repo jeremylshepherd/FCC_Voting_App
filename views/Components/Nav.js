@@ -2,18 +2,6 @@ import React from "react";
 import {Link} from "react-router";
 
 export default class Nav extends React.Component {
-    
-    componentDidMount() {
-        let login = this.refs.login;
-        if(("standalone" in window.navigator) && window.navigator.standalone){
-            //console.log('Standalone mode');
-            // login.addEventListener('click', (e) => {
-            //     e.preventDefault();
-            //     window.open(login.href, "Authentication");
-            // });
-        }
-    }
-    
     render() {
         let icon = this.props.avatar !== '' ? (
             <ul className="nav navbar-nav navbar-right">
