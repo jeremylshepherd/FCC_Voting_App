@@ -29,4 +29,15 @@
     <link href="dist/apple_splash_750.png" sizes="750x1334" rel="apple-touch-startup-image" />
     <link href="dist/apple_splash_640.png" sizes="640x1136" rel="apple-touch-startup-image" />
     
+    <script>
+      if("serviceWorker" in navigator) {
+        try{
+        navigator.serviceWorker.register('service-worker.js');
+        console.log(`serviceWorker registered!`);
+        } catch(error) {
+          console.log('Registration failed');
+        }
+      }
+    </script>
+    
 </head>
